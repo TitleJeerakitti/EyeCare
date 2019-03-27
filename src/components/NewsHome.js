@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, } from 'react-native';
-import { TextHeader, Card, TextContent, Button } from './common';
-import { WHITE } from '../config';
+import { TextHeader, Card, ButtonImage } from './common';
 
 class NewsHome extends React.Component {
     constructor(props) {
@@ -20,14 +19,12 @@ class NewsHome extends React.Component {
 
     renderNews() {
         return this.state.news.map((item, index) => 
-            <Button
+            <ButtonImage 
                 key={index}
                 onPress={() => console.log('test')}
-                backgroundColor={WHITE}
-                activeOpacity={1}
-            >
-                <TextContent>{item.name}</TextContent>
-            </Button>
+                source={require('../images/study.png')}
+                title={item.name}
+            />
         );
     }
 

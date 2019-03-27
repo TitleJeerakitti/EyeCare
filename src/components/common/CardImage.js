@@ -1,6 +1,8 @@
 import React from 'react';
 import { Image, Dimensions, } from 'react-native';
-import { Row, Center, TextHeader } from '../common';
+import { Row, } from './Row';
+import { Center, } from './Center';
+import { TextHeader, } from './TextHeader';
 import { WHITE, DARK_GRAY } from '../../config';
 
 const HEIGHT = Dimensions.get('window').height;

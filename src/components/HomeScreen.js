@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, } from 'react-native';
-import { CardImage } from './home_screen';
-import { TextContent, Row, Button, } from './common';
-import { WHITE, BLUE, YELLOW } from '../config';
+import { TextContent, Row, Button, CardImage } from './common';
+import { WHITE, BLUE, YELLOW, RED } from '../config';
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -66,7 +65,7 @@ class HomeScreen extends React.Component {
                         <TextContent>{this.state.appointment.place}</TextContent>
                     </View>
                 </CardImage>
-                <Button backgroundColor='red' color='#FFF' onPress={() => console.log('test')}>
+                <Button backgroundColor={RED} color='#FFF' onPress={() => console.log('test')}>
                     แจ้งหยอดตา
                 </Button>
                 <Button backgroundColor={YELLOW} onPress={() => console.log('test2')}>
