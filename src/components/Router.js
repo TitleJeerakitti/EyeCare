@@ -3,6 +3,7 @@ import { Router, Scene, Tabs, } from 'react-native-router-flux';
 import { NavBar, IconTab, } from './common';
 import HomeScreen from './HomeScreen';
 import NewsHome from './NewsHome';
+import Miscellaneous from './Miscellaneous';
 
 class RouterComponent extends React.Component {
     render() {
@@ -27,11 +28,11 @@ class RouterComponent extends React.Component {
                             initial 
                         />
                     </Scene>
-                    <Scene key='etc' icon={IconTab} iconName='comment-question'>
+                    <Scene key='etc' icon={IconTab} iconName='comment-question' initial>
                         <Scene 
                             key='etc_home' 
                             title='เบ็ดเตล็ด' 
-                            component={HomeScreen} 
+                            component={Miscellaneous} 
                             navBar={NavBar} 
                             initial 
                         />

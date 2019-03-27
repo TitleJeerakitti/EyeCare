@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, } from 'react-native';
 import { CardImage } from './home_screen';
-import { TextContent, Row, Button, Center } from './common';
+import { TextContent, Row, Button, } from './common';
 import { WHITE, BLUE, YELLOW } from '../config';
 
 class HomeScreen extends React.Component {
