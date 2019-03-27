@@ -1,15 +1,24 @@
 import React from 'react';
 import { View, Text, ScrollView, } from 'react-native';
 import { CardImage } from './home_screen';
-import { TextContent, Row, Button } from './common';
+import { TextContent, Row, Button, Center } from './common';
 import { WHITE, BLUE, YELLOW } from '../config';
 
 class HomeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            patient: {
+                name: 'นาย สมชาย สุดหล่อ',
+                age: '62',
+            },
             leftEye: ['09:00', '12:00', '18:00'],
             rightEye: ['10:00', '16:00'],
+            appointment: {
+                date: '30 พฤศจิกายน 2562',
+                time: '16:00',
+                place: 'โรงพยาบาลธรรมศาสตร์'
+            }
         };
     }
 
@@ -28,8 +37,8 @@ class HomeScreen extends React.Component {
                     source={require('../images/user.png')}
                     title='ข้อมูลผู้ป่วย'
                 >
-                    <TextContent numberOfLines={1}>นาย สมชาย สุดหล่อ</TextContent>
-                    <TextContent style={{ }}>62 ปี</TextContent>
+                    <TextContent numberOfLines={1}>{this.state.patient.name}</TextContent>
+                    <TextContent style={{ }}>{this.state.patient.age} ปี</TextContent>
                 </CardImage>
                 <CardImage
                     source={require('../images/eye-dropper.png')}
@@ -50,10 +59,12 @@ class HomeScreen extends React.Component {
                     source={require('../images/calendar.png')}
                     title='นัดพบแพทย์'
                 >
-                    <TextContent style={{ color: BLUE, fontWeight: 'bold', }}>
-                        วันอังคาร 16 ตุลาคม 2562
-                    </TextContent>
-                    <TextContent>โรงพยาบาลธรรมศาสตร์</TextContent>
+                    <View style={{ flex: 1, }}>
+                        <TextContent style={{ color: BLUE, fontWeight: 'bold', }}>
+                            {this.state.appointment.date} ({this.state.appointment.time})
+                        </TextContent>
+                        <TextContent>{this.state.appointment.place}</TextContent>
+                    </View>
                 </CardImage>
                 <Button backgroundColor='red' color='#FFF' onPress={() => console.log('test')}>
                     แจ้งหยอดตา

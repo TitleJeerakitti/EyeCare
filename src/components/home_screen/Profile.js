@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, Dimensions, ScrollView, } from 'react-native';
-import { Icon } from 'react-native-elements';
 import { WHITE, } from '../../config';
 import { TextContent, TextHeader, Center, Row, } from '../common';
 // Icon made by Freepik from www.flaticon.com 
