@@ -3,13 +3,15 @@ import { Router, Scene, Tabs, } from 'react-native-router-flux';
 import { NavBar, IconTab, } from './common';
 import HomeScreen from './HomeScreen';
 import NewsHome from './NewsHome';
+import Miscellaneous from './Miscellaneous';
+import DoctorHome from './DoctorHome';
 
 class RouterComponent extends React.Component {
     render() {
         return (
             <Router>
                 <Tabs showLabel={false}>
-                    <Scene key='main' initial icon={IconTab} iconName='home'>
+                    <Scene key='main' initial icon={IconTab} iconName='home' initial>
                         <Scene 
                             key='home' 
                             title='เมนูหลัก' 
@@ -31,7 +33,7 @@ class RouterComponent extends React.Component {
                         <Scene 
                             key='etc_home' 
                             title='เบ็ดเตล็ด' 
-                            component={HomeScreen} 
+                            component={Miscellaneous} 
                             navBar={NavBar} 
                             initial 
                         />
@@ -40,7 +42,7 @@ class RouterComponent extends React.Component {
                         <Scene 
                             key='doctor_home' 
                             title='แพทย์' 
-                            component={HomeScreen} 
+                            component={DoctorHome} 
                             navBar={NavBar} 
                             initial 
                         />

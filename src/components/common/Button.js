@@ -3,11 +3,12 @@ import { TouchableOpacity, } from 'react-native';
 import { Center } from './Center';
 import { TextContent } from './TextContent';
 
-const Button = ({ onPress, children, style, color, backgroundColor }) => {
+const Button = ({ onPress, children, style, color, backgroundColor, activeOpacity }) => {
     return (
         <TouchableOpacity 
             onPress={onPress} 
             style={{ ...styles.container, backgroundColor, ...style }}
+            activeOpacity={activeOpacity}
         >
             <Center>
                 <TextContent style={{ color }}>{children}</TextContent>
