@@ -10,3 +10,4 @@ export * from './CardSection';
 export * from './Input';
 export * from './ButtonImage';
 export * from './CardImage';
+export * from './InputWithText';

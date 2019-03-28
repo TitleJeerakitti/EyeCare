@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, } from 'react-native';
-import { TextContent, Row, Button, CardImage } from './common';
+import { Actions } from 'react-native-router-flux';
+import { TextContent, Row, Button, CardImage, ButtonImage } from './common';
 import { WHITE, BLUE, YELLOW, RED } from '../config';
 
 class HomeScreen extends React.Component {
@@ -32,13 +33,15 @@ class HomeScreen extends React.Component {
     render() {
         return (
             <ScrollView>
-                <CardImage
+                <ButtonImage
+                    onPress={() => Actions.edit_profile()}
                     source={require('../images/user.png')}
                     title='ข้อมูลผู้ป่วย'
+                    notHorizontal
                 >
                     <TextContent numberOfLines={1}>{this.state.patient.name}</TextContent>
                     <TextContent style={{ }}>{this.state.patient.age} ปี</TextContent>
-                </CardImage>
+                </ButtonImage>
                 <CardImage
                     source={require('../images/eye-dropper.png')}
                     title='เวลาหยอดตา'

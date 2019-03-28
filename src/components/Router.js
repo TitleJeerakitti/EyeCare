@@ -5,6 +5,7 @@ import HomeScreen from './HomeScreen';
 import NewsHome from './NewsHome';
 import Miscellaneous from './Miscellaneous';
 import DoctorHome from './DoctorHome';
+import EditProfile from './EditProfile';
 
 class RouterComponent extends React.Component {
     render() {
@@ -17,7 +18,15 @@ class RouterComponent extends React.Component {
                             title='เมนูหลัก' 
                             component={HomeScreen} 
                             navBar={NavBar} 
-                            initial 
+                            // initial 
+                        />
+                        <Scene 
+                            key='edit_profile'
+                            title='แก้ไขข้อมูล'
+                            component={EditProfile}
+                            navBar={NavBar}
+                            onBack
+                            initial
                         />
                     </Scene>
                     <Scene key='news' icon={IconTab} iconName='comment-text-multiple'>
