@@ -11,3 +11,5 @@ export * from './Input';
 export * from './ButtonImage';
 export * from './CardImage';
 export * from './InputWithText';
+export * from './Space';
+export * from './TimeCard';

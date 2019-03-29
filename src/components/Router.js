@@ -6,6 +6,8 @@ import NewsHome from './NewsHome';
 import Miscellaneous from './Miscellaneous';
 import DoctorHome from './DoctorHome';
 import EditProfile from './EditProfile';
+import EyeDropper from './EyeDropper';
+import StopWatch from './StopWatch';
 
 class RouterComponent extends React.Component {
     render() {
@@ -18,7 +20,7 @@ class RouterComponent extends React.Component {
                             title='เมนูหลัก' 
                             component={HomeScreen} 
                             navBar={NavBar} 
-                            // initial 
+                            initial  
                         />
                         <Scene 
                             key='edit_profile'
@@ -26,7 +28,21 @@ class RouterComponent extends React.Component {
                             component={EditProfile}
                             navBar={NavBar}
                             onBack
-                            initial
+                            // initial
+                        />
+                        <Scene 
+                            key='eyedropper'
+                            title='ยาหยอดตา'
+                            component={EyeDropper}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='stopwatch'
+                            title='จับเวลาหยอดตา'
+                            component={StopWatch}
+                            navBar={NavBar}
+                            onBack
                         />
                     </Scene>
                     <Scene key='news' icon={IconTab} iconName='comment-text-multiple'>
