@@ -1,48 +1,54 @@
 import React from 'react';
-import { ScrollView, } from 'react-native';
+import { ScrollView, Text, } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Card, ButtonIconWithText } from './common';
-import { RED, ABNORMAL, NORMAL, WHITE } from '../config';
-import EyeCard from './special/EyeCard';
+import { ButtonImage, Card, ButtonIconWithText } from './common';
+import { BLACK, WHITE } from '../config';
 import { doctorSelectEyeDrop } from '../actions';
 
-class DoctorEyeDrop extends React.Component {
+class DoctorPickEyeDrop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             data: [
                 {
                     name: 'Eye Dropper A',
-                    time: ['09:00', '12:00', '20:00'],
-                    eyePosition: 'LEFT',
                     image: require('../images/eye-dropper.png'),
-                    type: ABNORMAL,
-                    timeToDrop: 5,
-                    timeToPush: 1,
                     detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2', 'ศัพท์แพทย์ 3'],
                 },
                 {
                     name: 'Eye Dropper B',
-                    time: ['09:05', '12:05'],
-                    eyePosition: 'RIGHT',
                     image: require('../images/eye-dropper.png'),
-                    type: NORMAL,
-                    timeToDrop: 3,
                     detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2'],
                 },
             ]
         };
     }
 
-    onClickEyeCard(item) {
+    onSelect(item) {
         this.props.doctorSelectEyeDrop(item);
         Actions.doctor_eyedrop_detail();
     }
 
+    renderDetail(details) {
+        return details.map((item, index) => 
+            <Text key={index}>- {item}</Text>
+        );
+    }
+
     renderEyeCard() {
         return this.state.data.map((item, index) => 
-            <EyeCard key={index} item={item} onPress={() => this.onClickEyeCard(item)} />
+            <ButtonImage
+                key={index}
+                source={item.image}
+                onPress={() => this.onSelect(item)}
+                title={item.name}
+                notHorizontal
+            >
+                <Card>
+                    {this.renderDetail(item.detail)}
+                </Card>
+            </ButtonImage>
         );
     }
 
@@ -51,12 +57,12 @@ class DoctorEyeDrop extends React.Component {
             <ScrollView>
                 {this.renderEyeCard()}
                 <Card>
-                    <ButtonIconWithText
-                        title='สั่งยาหยอดตา'
+                    <ButtonIconWithText 
+                        title='เพิ่มยาหยอดตา'
+                        iconName='camera-alt'
+                        iconBg={BLACK}
                         iconColor={WHITE}
-                        iconBg={RED}
-                        iconName='add'
-                        onPress={() => Actions.doctor_pick_new()}
+                        onPress={() => console.log('camera taking')}
                     />
                 </Card>
             </ScrollView>
@@ -64,4 +70,4 @@ class DoctorEyeDrop extends React.Component {
     }
 }
 
-export default connect(null, { doctorSelectEyeDrop })(DoctorEyeDrop);
+export default connect(null, { doctorSelectEyeDrop })(DoctorPickEyeDrop);

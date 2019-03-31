@@ -47,7 +47,7 @@ class DoctorHome extends React.Component {
                         title='ยาหยอดตา'
                     />
                     <ButtonImage
-                        onPress={() => console.log('test')}
+                        onPress={() => Actions.doctor_make_appointment()}
                         source={require('../images/calendar.png')}
                         title='นัดพบแพทย์'
                     />
