@@ -10,20 +10,21 @@ import {
     PopUpPicker, 
     Button 
 } from './common';
-import { BLUE, WHITE, RED, BLACK } from '../config';
+import { BLUE, WHITE, RED, BLACK, ABNORMAL } from '../config';
 
 class DoctorEyeDropDetail extends React.Component {
     constructor(props) {
         super(props);
+        const { type = null, eyePosition = null } = this.props.data;
         this.state = {
-            isAbnormal: false,
-            eyePosition: null,
+            isAbnormal: type === ABNORMAL,
+            eyePosition,
             visible: false,
             date: null,
         };
     }
 
-    renderTimeList(times) {
+    renderTimeList(times = []) {
         return times.map((item, index) => 
             <Button
                 key={index}
@@ -35,7 +36,7 @@ class DoctorEyeDropDetail extends React.Component {
         );
     }
 
-    renderDetailList(details) {
+    renderDetailList(details = []) {
         return details.map((item, index) =>
             <Text key={index}>- {item}</Text>
         );

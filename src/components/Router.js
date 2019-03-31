@@ -11,6 +11,8 @@ import StopWatch from './StopWatch';
 import EyeChart from './EyeChart';
 import DoctorEyeDrop from './DoctorEyeDrop';
 import DoctorEyeDropDetail from './DoctorEyeDropDetail';
+import DoctorPickEyeDrop from './DoctorPickEyeDrop';
+import DoctorAppointment from './DoctorAppointment';
 
 class RouterComponent extends React.Component {
     render() {
@@ -91,8 +93,22 @@ class RouterComponent extends React.Component {
                         />
                         <Scene 
                             key='doctor_eyedrop_detail'
-                            title='ตั้งค่ายาหยอดตา'
+                            title='ปรับแต่งการจ่ายยา'
                             component={DoctorEyeDropDetail}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='doctor_pick_new'
+                            title='เลือกยาหยอดตา'
+                            component={DoctorPickEyeDrop}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='doctor_make_appointment'
+                            title='นัดพบแพทย์'
+                            component={DoctorAppointment}
                             navBar={NavBar}
                             onBack
                         />
