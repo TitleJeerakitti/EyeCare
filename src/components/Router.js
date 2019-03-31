@@ -8,13 +8,16 @@ import DoctorHome from './DoctorHome';
 import EditProfile from './EditProfile';
 import EyeDropper from './EyeDropper';
 import StopWatch from './StopWatch';
+import EyeChart from './EyeChart';
+import DoctorEyeDrop from './DoctorEyeDrop';
+import DoctorEyeDropDetail from './DoctorEyeDropDetail';
 
 class RouterComponent extends React.Component {
     render() {
         return (
             <Router>
                 <Tabs showLabel={false}>
-                    <Scene key='main' initial icon={IconTab} iconName='home' initial>
+                    <Scene key='main' initial icon={IconTab} iconName='home' /* initial */>
                         <Scene 
                             key='home' 
                             title='เมนูหลัก' 
@@ -44,6 +47,14 @@ class RouterComponent extends React.Component {
                             navBar={NavBar}
                             onBack
                         />
+                        <Scene 
+                            key='chart'
+                            title='สถิติการหยอดตา'
+                            component={EyeChart}
+                            navBar={NavBar}
+                            onBack
+                            // initial  
+                        />
                     </Scene>
                     <Scene key='news' icon={IconTab} iconName='comment-text-multiple'>
                         <Scene 
@@ -63,13 +74,27 @@ class RouterComponent extends React.Component {
                             initial 
                         />
                     </Scene>
-                    <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse'>
+                    <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse' initial>
                         <Scene 
                             key='doctor_home' 
                             title='แพทย์' 
                             component={DoctorHome} 
                             navBar={NavBar} 
                             initial 
+                        />
+                        <Scene 
+                            key='doctor_eyedrop'
+                            title='จ่ายยาหยอดตา'
+                            component={DoctorEyeDrop}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='doctor_eyedrop_detail'
+                            title='ตั้งค่ายาหยอดตา'
+                            component={DoctorEyeDropDetail}
+                            navBar={NavBar}
+                            onBack
                         />
                     </Scene>
                 </Tabs>

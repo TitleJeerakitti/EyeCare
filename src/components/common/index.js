@@ -13,3 +13,6 @@ export * from './CardImage';
 export * from './InputWithText';
 export * from './Space';
 export * from './TimeCard';
+export * from './ButtonSmallText';
+export * from './ButtonIconWithText';
+export * from './PopUpPicker';

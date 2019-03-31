@@ -33,10 +33,10 @@ class EyeCard extends React.Component {
     }
 
     render() {
-        const { item, disabled } = this.props;
+        const { item, disabled, onPress = false } = this.props;
         return (
             <ButtonImage
-                onPress={() => this.onSelectEyeDropper(item)}
+                onPress={!onPress ? () => this.onSelectEyeDropper(item) : onPress}
                 source={item.image}
                 title={item.name}
                 disabled={disabled}

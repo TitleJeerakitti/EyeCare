@@ -71,7 +71,7 @@ class HomeScreen extends React.Component {
                 <Button backgroundColor={RED} color='#FFF' onPress={() => Actions.eyedropper()}>
                     แจ้งหยอดตา
                 </Button>
-                <Button backgroundColor={YELLOW} onPress={() => console.log('test2')}>
+                <Button backgroundColor={YELLOW} onPress={() => Actions.chart()}>
                     สถิติการหยอดตา
                 </Button>
             </ScrollView>
