@@ -9,3 +9,6 @@ export const DARK_GRAY = '#333';
 
 export const FONT_SIZE = 18;
 export const FONT_HEADER = 20;
+
+export const NORMAL = 'NORMAL';
+export const ABNORMAL = 'ABNORMAL';

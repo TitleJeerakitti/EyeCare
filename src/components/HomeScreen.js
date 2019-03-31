@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, ScrollView, } from 'react-native';
-import { TextContent, Row, Button, CardImage } from './common';
-import { WHITE, BLUE, YELLOW, RED } from '../config';
+import { View, ScrollView, } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
+import { BLUE, YELLOW, RED } from '../config';
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -23,25 +24,27 @@ class HomeScreen extends React.Component {
 
     renderTimeSlot(data) {
         return data.map((item, index) => 
-            <View key={index} style={styles.importantCard}>
-                <Text style={{ color: WHITE }}>{item}</Text>
-            </View>
+            <TimeCard key={index}>{item}</TimeCard>
         );
     }
 
     render() {
         return (
             <ScrollView>
-                <CardImage
+                <ButtonImage
+                    onPress={() => Actions.edit_profile()}
                     source={require('../images/user.png')}
                     title='ข้อมูลผู้ป่วย'
+                    notHorizontal
                 >
                     <TextContent numberOfLines={1}>{this.state.patient.name}</TextContent>
                     <TextContent style={{ }}>{this.state.patient.age} ปี</TextContent>
-                </CardImage>
-                <CardImage
+                </ButtonImage>
+                <ButtonImage
+                    onPress={() => Actions.eyedropper()}
                     source={require('../images/eye-dropper.png')}
                     title='เวลาหยอดตา'
+                    notHorizontal
                 >
                     <Row>
                         <View style={{ flex: 1, alignItems: 'center', }}>
@@ -53,7 +56,7 @@ class HomeScreen extends React.Component {
                             {this.renderTimeSlot(this.state.rightEye)}
                         </View>
                     </Row>
-                </CardImage>
+                </ButtonImage>
                 <CardImage
                     source={require('../images/calendar.png')}
                     title='นัดพบแพทย์'
@@ -65,25 +68,15 @@ class HomeScreen extends React.Component {
                         <TextContent>{this.state.appointment.place}</TextContent>
                     </View>
                 </CardImage>
-                <Button backgroundColor={RED} color='#FFF' onPress={() => console.log('test')}>
+                <Button backgroundColor={RED} color='#FFF' onPress={() => Actions.eyedropper()}>
                     แจ้งหยอดตา
                 </Button>
-                <Button backgroundColor={YELLOW} onPress={() => console.log('test2')}>
+                <Button backgroundColor={YELLOW} onPress={() => Actions.chart()}>
                     สถิติการหยอดตา
                 </Button>
             </ScrollView>
         );
     }
 }
-
-const styles = {
-    importantCard: {
-        paddingHorizontal: 10, 
-        paddingVertical: 5, 
-        backgroundColor: BLUE, 
-        borderRadius: '50%', 
-        marginTop: 5,
-    }
-};
 
 export default HomeScreen;

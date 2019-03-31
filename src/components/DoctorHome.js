@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, KeyboardAvoidingView, } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { Button, Card, CardSection, Input, ButtonImage } from './common';
 import { WHITE, BLUE, RED } from '../config';
 
@@ -9,8 +10,8 @@ class DoctorHome extends React.Component {
         this.state = {
             username: 'doctor',
             password: '1234',
-            inputUsername: '',
-            inputPassword: '',
+            inputUsername: 'doctor',
+            inputPassword: '1234',
             isLogin: false,
             error: '',
         };
@@ -41,7 +42,7 @@ class DoctorHome extends React.Component {
             return (
                 <View>
                     <ButtonImage
-                        onPress={() => console.log('test')}
+                        onPress={() => Actions.doctor_eyedrop()}
                         source={require('../images/eye-dropper.png')}
                         title='ยาหยอดตา'
                     />
