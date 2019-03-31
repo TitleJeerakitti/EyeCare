@@ -2,3 +2,4 @@ assets
 node_modules
 .expo/*
 .DS_Store
+src/images/*

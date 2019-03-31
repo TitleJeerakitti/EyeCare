@@ -19,7 +19,7 @@ class RouterComponent extends React.Component {
         return (
             <Router>
                 <Tabs showLabel={false}>
-                    <Scene key='main' initial icon={IconTab} iconName='home' /* initial */>
+                    <Scene key='main' initial icon={IconTab} iconName='home' initial>
                         <Scene 
                             key='home' 
                             title='เมนูหลัก' 
@@ -76,7 +76,7 @@ class RouterComponent extends React.Component {
                             initial 
                         />
                     </Scene>
-                    <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse' initial>
+                    <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse'>
                         <Scene 
                             key='doctor_home' 
                             title='แพทย์' 
