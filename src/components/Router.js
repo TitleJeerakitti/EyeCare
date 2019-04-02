@@ -13,6 +13,7 @@ import DoctorEyeDrop from './DoctorEyeDrop';
 import DoctorEyeDropDetail from './DoctorEyeDropDetail';
 import DoctorPickEyeDrop from './DoctorPickEyeDrop';
 import DoctorAppointment from './DoctorAppointment';
+import DoctorEyeDropGroup from './DoctorEyeDropGroup';
 
 class RouterComponent extends React.Component {
     render() {
@@ -95,6 +96,13 @@ class RouterComponent extends React.Component {
                             key='doctor_eyedrop_detail'
                             title='ปรับแต่งการจ่ายยา'
                             component={DoctorEyeDropDetail}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='doctor_pick_new_group'
+                            title='เลือกยาหยอดตา'
+                            component={DoctorEyeDropGroup}
                             navBar={NavBar}
                             onBack
                         />

@@ -10,18 +10,7 @@ class DoctorPickEyeDrop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    name: 'Eye Dropper A',
-                    image: require('../images/eye-dropper.png'),
-                    detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2', 'ศัพท์แพทย์ 3'],
-                },
-                {
-                    name: 'Eye Dropper B',
-                    image: require('../images/eye-dropper.png'),
-                    detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2'],
-                },
-            ]
+            data: this.props.group,
         };
     }
 
@@ -70,4 +59,9 @@ class DoctorPickEyeDrop extends React.Component {
     }
 }
 
-export default connect(null, { doctorSelectEyeDrop })(DoctorPickEyeDrop);
+const mapStateToProps = ({ doctor }) => {
+    const { group } = doctor;
+    return { group };
+};
+
+export default connect(mapStateToProps, { doctorSelectEyeDrop })(DoctorPickEyeDrop);
