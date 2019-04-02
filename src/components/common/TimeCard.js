@@ -15,7 +15,7 @@ const styles = {
         paddingHorizontal: 10, 
         paddingVertical: 5, 
         backgroundColor: BLUE, 
-        borderRadius: '50%', 
+        borderRadius: 50, 
         marginTop: 5,
     }
 };
