@@ -56,7 +56,7 @@ class DoctorEyeDrop extends React.Component {
                         iconColor={WHITE}
                         iconBg={RED}
                         iconName='add'
-                        onPress={() => Actions.doctor_pick_new()}
+                        onPress={() => Actions.doctor_pick_new_group()}
                     />
                 </Card>
             </ScrollView>
