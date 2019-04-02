@@ -20,7 +20,8 @@ class EyeCard extends React.Component {
                 source={EyeImage} 
                 style={{ 
                     ...styles.imageStyle, 
-                    opacity: isTrue ? 1 : 0.5 
+                    // opacity: isTrue ? 1 : 0.5,
+                    tintColor: isTrue ? 'red' : '#CCC',
                 }} 
             />
         );
