@@ -14,6 +14,8 @@ import DoctorEyeDropDetail from './DoctorEyeDropDetail';
 import DoctorPickEyeDrop from './DoctorPickEyeDrop';
 import DoctorAppointment from './DoctorAppointment';
 import DoctorEyeDropGroup from './DoctorEyeDropGroup';
+import Magnifier from './Magnifier';
+import EyeDropsVideo from './EyeDropsVideo';
 
 class RouterComponent extends React.Component {
     render() {
@@ -75,6 +77,18 @@ class RouterComponent extends React.Component {
                             component={Miscellaneous} 
                             navBar={NavBar} 
                             initial 
+                        />
+                        <Scene 
+                            key='magnifier' 
+                            title='แว่นขยาย' 
+                            component={Magnifier} 
+                            navBar={NavBar} 
+                        />
+                        <Scene 
+                            key='eyedropsvideo' 
+                            title='วิธีหยอดตา' 
+                            component={EyeDropsVideo} 
+                            navBar={NavBar} 
                         />
                     </Scene>
                     <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse'>
