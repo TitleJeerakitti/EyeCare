@@ -8,22 +8,24 @@ class VideoPlayer extends React.Component {
         super(props);
         this.state = {
             screenWidth: Dimensions.get('window').width,
-            shouldPlay: false,
             heightScaled: 300,
         };
     }
 
+    handleVideoRef = component => {
+        this.playbackObject = component;
+      }
+      
     render() {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <NavigationEvents
                     onWillBlur={() => {
-                        this.setState({
-                            shouldPlay: false
-                        });
+                    this.playbackObject.pauseAsync();
                     }}
                 />
                 <Video
+                    ref={this.handleVideoRef}
                     style={{
                         width: this.state.screenWidth,
                         height: this.state.heightScaled
@@ -33,7 +35,7 @@ class VideoPlayer extends React.Component {
                     volume={1.0}
                     isMuted={false}
                     resizeMode="contain"
-                    shouldPlay={this.state.shouldPlay}
+                    shouldPlay
                     isLooping={false}
                     useNativeControls
                     onReadyForDisplay={event => {
@@ -41,7 +43,6 @@ class VideoPlayer extends React.Component {
 
                         this.setState({
                             heightScaled: height * (this.state.screenWidth / width),
-                            shouldPlay: true
                         });
                     }}
                     onFullscreenUpdate={event => {
@@ -56,6 +57,7 @@ class VideoPlayer extends React.Component {
         );
     }
 }
+
 
 export default VideoPlayer;
 
