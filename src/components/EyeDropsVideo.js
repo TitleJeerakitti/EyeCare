@@ -10,8 +10,6 @@ class VideoPlayer extends React.Component {
             screenWidth: Dimensions.get('window').width,
             shouldPlay: false,
             heightScaled: 300,
-            height: 0,
-            with: 0
         };
     }
 
@@ -39,10 +37,10 @@ class VideoPlayer extends React.Component {
                     isLooping={false}
                     useNativeControls
                     onReadyForDisplay={event => {
+                        const { width, height } = event.naturalSize;
+
                         this.setState({
-                            width: event.naturalSize.width,
-                            height: event.naturalSize.height,
-                            heightScaled: this.state.height * (this.state.screenWidth / this.state.width),
+                            heightScaled: height * (this.state.screenWidth / width),
                             shouldPlay: true
                         });
                     }}
