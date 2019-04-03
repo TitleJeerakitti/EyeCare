@@ -3,11 +3,14 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera, Permissions } from 'expo';
 
 export default class CameraExample extends React.Component {
-  state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
-    zoom: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasCameraPermission: null,
+      type: Camera.Constants.Type.back,
+      zoom: 0,
+    };
+  }
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -46,7 +49,8 @@ export default class CameraExample extends React.Component {
                 }}
               >
                 <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}
+                >
                   {' '}Flip{' '}
                 </Text>
               </TouchableOpacity>
@@ -81,7 +85,7 @@ export default class CameraExample extends React.Component {
                 >
                   {' '}Zoom Out{' '}
                 </Text>
-              </TouchableOpacity>               
+              </TouchableOpacity>
             </View>
           </Camera>
         </View>

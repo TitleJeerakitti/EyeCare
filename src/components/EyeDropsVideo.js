@@ -4,40 +4,15 @@ import { Video, ScreenOrientation } from 'expo';
 import { NavigationEvents } from "react-navigation";
 
 class VideoPlayer extends React.Component {
-    state = {
-        screenWidth: Dimensions.get('window').width,
-        shouldPlay: false,
-        heightScaled: 300,
-        height: 0,
-        with: 0
-    };
-
-    /*componentDidMount() {
-        ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
-    }
-
-    componentWillUnmount() {
-        this.setState({
-            shouldPlay: false
-        });
-        Dimensions.removeEventListener('change', this.handler);
-        ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
-    }*/
-
-    handler = e => {
-        if (e.window.width < e.window.height) {
-            this.setState({
-                screenWidth: e.window.width,
-            });
-        }
-        else {
-            this.setState({
-                screenWidth: e.window.width - 162,
-            });
-        }
-        this.setState({
-            heightScaled: this.state.height * (this.state.screenWidth / this.state.width),
-        });
+    constructor(props) {
+        super(props);
+        this.state = {
+            screenWidth: Dimensions.get('window').width,
+            shouldPlay: false,
+            heightScaled: 300,
+            height: 0,
+            with: 0
+        };
     }
 
     render() {
@@ -48,12 +23,6 @@ class VideoPlayer extends React.Component {
                         this.setState({
                             shouldPlay: false
                         });
-                        Dimensions.removeEventListener('change', this.handler);
-                        ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
-                    }}
-                    onDidFocus={() => {
-                        Dimensions.addEventListener('change', this.handler);
-                        ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
                     }}
                 />
                 <Video
@@ -75,7 +44,14 @@ class VideoPlayer extends React.Component {
                             height: event.naturalSize.height,
                             heightScaled: this.state.height * (this.state.screenWidth / this.state.width),
                             shouldPlay: true
-                        });   
+                        });
+                    }}
+                    onFullscreenUpdate={event => {
+                        if (event.fullscreenUpdate === 0) {
+                            ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
+                        } else if (event.fullscreenUpdate === 2) {
+                            ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
+                        }
                     }}
                 />
             </View>
