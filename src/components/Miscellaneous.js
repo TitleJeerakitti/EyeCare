@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { ButtonImage, } from './common';
 
 class Miscellaneous extends React.Component {
@@ -7,12 +8,12 @@ class Miscellaneous extends React.Component {
         return (
             <View style={{ flex: 1 }}>
                 <ButtonImage
-                    onPress={() => console.log('test')}
+                    onPress={() => Actions.magnifier()}
                     source={require('../images/search.png')}
                     title='แว่นขยาย'
                 />
                 <ButtonImage
-                    onPress={() => console.log('test')}
+                    onPress={() => Actions.eyedropsvideo()}
                     source={require('../images/video-player.png')}
                     title='วิธีหยอดตา'
                 />
