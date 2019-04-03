@@ -32,7 +32,7 @@ class VideoPlayer extends React.Component {
                     rate={1.0}
                     volume={1.0}
                     isMuted={false}
-                    resizeMode="cover"
+                    resizeMode="contain"
                     shouldPlay={this.state.shouldPlay}
                     isLooping={false}
                     useNativeControls
