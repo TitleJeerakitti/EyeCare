@@ -10,7 +10,7 @@ class DoctorPickEyeDrop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.group,
+            data: this.props.data,
         };
     }
 
@@ -46,6 +46,10 @@ class DoctorPickEyeDrop extends React.Component {
             <ScrollView>
                 {this.renderEyeCard()}
                 <Card>
+
+                    {/* พี่เพิ่มตรงนี้นะ ข้อมูลใช้ตรงนี้ได้เลย */}
+                    <Text>{this.props.group}</Text>
+                    
                     <ButtonIconWithText 
                         title='เพิ่มยาหยอดตา'
                         iconName='camera-alt'
@@ -60,8 +64,8 @@ class DoctorPickEyeDrop extends React.Component {
 }
 
 const mapStateToProps = ({ doctor }) => {
-    const { group } = doctor;
-    return { group };
+    const { group, data } = doctor;
+    return { group, data };
 };
 
 export default connect(mapStateToProps, { doctorSelectEyeDrop })(DoctorPickEyeDrop);

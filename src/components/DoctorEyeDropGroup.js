@@ -45,8 +45,8 @@ class DoctorEyeDropGroup extends React.Component {
         };
     }
 
-    onClick(item) {
-        this.props.doctorSelectEyeDropGroup(item);
+    onClick(item, category) {
+        this.props.doctorSelectEyeDropGroup(item, category);
         Actions.doctor_pick_new();
     }
 
@@ -55,7 +55,7 @@ class DoctorEyeDropGroup extends React.Component {
             <Button
                 key={index}
                 backgroundColor={WHITE}
-                onPress={() => this.onClick(item.eyeDrop)}
+                onPress={() => this.onClick(item.eyeDrop, item.name)}
             >
                 {item.name}
             </Button>
