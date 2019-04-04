@@ -51,7 +51,7 @@ class DoctorPickEyeDrop extends React.Component {
                         iconName='camera-alt'
                         iconBg={BLACK}
                         iconColor={WHITE}
-                        onPress={() => console.log('camera taking')}
+                        onPress={() => Actions.doctor_take_photo()}
                     />
                 </Card>
             </ScrollView>

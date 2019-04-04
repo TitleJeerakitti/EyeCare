@@ -23,10 +23,13 @@ export default class CameraExample extends React.Component {
       return <View />;
     } else if (hasCameraPermission === false) {
       return <Text>No access to camera</Text>;
-    } else {
-      return (
+    } return (
         <View style={{ flex: 1 }}>
-          <Camera style={{ flex: 1 }} type={this.state.type} zoom={this.state.zoom}>
+          <Camera 
+            style={{ flex: 1 }}
+            type={this.state.type}
+            zoom={this.state.zoom}
+          >
             <View
               style={{
                 flex: 1,
@@ -90,6 +93,5 @@ export default class CameraExample extends React.Component {
           </Camera>
         </View>
       );
-    }
   }
 }
