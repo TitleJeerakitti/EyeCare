@@ -11,21 +11,22 @@ import { Card } from './Card';
 const WIDTH = Dimensions.get('window').width * 0.6;
 
 class PopUpPicker extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            time: this.props.date,
-        };
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         time: this.props.date,
+    //     };
+    // }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.time !== this.props.date) {
-            this.setState({ time: this.props.date });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevState.time !== this.props.date) {
+    //         this.setState({ time: this.props.date });
+    //     }
+    // }
 
     render() {
-        const { visible, onCancel, onConfirm, } = this.props;
+        const { visible, onCancel, onConfirm, onDateChange, date } = this.props;
+        // console.log('popup ', this.state.time)
         return (
             <Modal
                 animationType="slide"
@@ -40,8 +41,10 @@ class PopUpPicker extends React.Component {
                         <Center>
                             <Text>เลือกเวลาที่ต้องการ</Text>
                             <DatePicker 
-                                date={this.state.time}
-                                onDateChange={(val) => this.setState({ time: val })}
+                                // date={this.state.time}
+                                // onDateChange={(val) => this.setState({ time: val })}
+                                date={date}
+                                onDateChange={onDateChange}
                                 mode='time'
                                 confirmBtnText='Confirm'
                                 cancelBtnText='Cancel'

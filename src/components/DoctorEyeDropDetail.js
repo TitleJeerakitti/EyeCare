@@ -45,6 +45,7 @@ class DoctorEyeDropDetail extends React.Component {
     render() {
         const { data } = this.props;
         const { isAbnormal, eyePosition, date, visible } = this.state;
+        console.log(date);
         return (
             <View>
                 <CardImage title={data.name} source={data.image}>
@@ -104,6 +105,7 @@ class DoctorEyeDropDetail extends React.Component {
                 <PopUpPicker 
                     date={date}
                     visible={visible} 
+                    onDateChange={(time) => this.setState({ date: time })}
                     onCancel={() => this.setState({ visible: false, date: null })}
                     onConfirm={() => this.setState({ visible: false, date: null })}
                 />
