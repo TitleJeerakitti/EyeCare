@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera, Permissions, FileSystem, } from 'expo';
 import { Actions } from 'react-native-router-flux';
 
-export default class CameraExample extends React.Component {
+export default class DoctorTakePhoto extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,8 +38,9 @@ export default class CameraExample extends React.Component {
       this.camera.takePictureAsync({ onPictureSaved: this.onPictureSaved });
     }
   };
-
+  
   render() {
+    
     const { hasCameraPermission } = this.state;
     if (hasCameraPermission === null) {
       return <View />;

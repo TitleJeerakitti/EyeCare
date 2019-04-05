@@ -1,16 +1,20 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { SQLite } from 'expo';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { Card, CardSection, Button } from './common';
-import { WHITE } from '../config';
+import { WHITE, DARK_GRAY } from '../config';
 import { doctorSelectEyeDropGroup } from '../actions';
+
+const categorydb = SQLite.openDatabase('category.db');
+const eyeDropdb = SQLite.openDatabase('eyedrop.db');
 
 class DoctorEyeDropGroup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
+            /*data: [
                 {
                     name: '01 PROSTAGLANDIN ANALOG',
                     eyeDrop: [
@@ -41,8 +45,14 @@ class DoctorEyeDropGroup extends React.Component {
                         },
                     ]
                 }
-            ]
+            ]*/
+            group: [],
+            data: []
         };
+    }
+
+    componentDidMount() {
+        this.groupData();
     }
 
     onClick(item, category) {
@@ -50,17 +60,39 @@ class DoctorEyeDropGroup extends React.Component {
         Actions.doctor_pick_new();
     }
 
+    groupData() {
+        categorydb.transaction(tx => {
+            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => this.setState({ group: _array }, function () {
+                if (this.state.group.length > 0) {
+                    this.eyeDropData();
+                }
+            }));
+        });    
+    }
+
+    eyeDropData() {
+        eyeDropdb.transaction(tx => {
+            this.state.group.forEach((eachGroup) => {
+                tx.executeSql('select * from items where category = ?', [eachGroup.id], (_, { rows: { _array } }) => {
+                    this.setState({
+                        data: this.state.data.concat({ group: eachGroup, eyeDrop: _array })
+                    });
+                });
+            });
+        });  
+    }
+
     renderList() {
-        return this.state.data.map((item, index) => 
-            <Button
+        return this.state.data.map((item, index) =>
+            <Button  
                 key={index}
                 backgroundColor={WHITE}
-                onPress={() => this.onClick(item.eyeDrop, item.name)}
+                onPress={() => this.onClick(item.eyeDrop, item.group)}
             >
-                {item.name}
+                {item.group.name}
             </Button>
         );
-    }
+    }     
 
     render() {
         return (

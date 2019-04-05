@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ButtonImage, Card, ButtonIconWithText } from './common';
 import { BLACK, WHITE } from '../config';
-import { doctorSelectEyeDrop } from '../actions';
+import { doctorSelectEyeDrop, doctorSelectEyeDropGroup } from '../actions';
 
 class DoctorPickEyeDrop extends React.Component {
     constructor(props) {
@@ -17,6 +17,11 @@ class DoctorPickEyeDrop extends React.Component {
     onSelect(item) {
         this.props.doctorSelectEyeDrop(item);
         Actions.doctor_eyedrop_detail();
+    }
+
+    onClick(item, category) {
+        this.props.doctorSelectEyeDropGroup(item, category);
+        Actions.doctor_take_photo();
     }
 
     renderDetail(details) {
@@ -46,16 +51,12 @@ class DoctorPickEyeDrop extends React.Component {
             <ScrollView>
                 {this.renderEyeCard()}
                 <Card>
-
-                    {/* พี่เพิ่มตรงนี้นะ ข้อมูลใช้ตรงนี้ได้เลย */}
-                    <Text>{this.props.group}</Text>
-                    
                     <ButtonIconWithText 
                         title='เพิ่มยาหยอดตา'
                         iconName='camera-alt'
                         iconBg={BLACK}
                         iconColor={WHITE}
-                        onPress={() => Actions.doctor_take_photo()}
+                        onPress={() => this.onClick(null, this.props.group)}
                     />
                 </Card>
             </ScrollView>
@@ -68,4 +69,4 @@ const mapStateToProps = ({ doctor }) => {
     return { group, data };
 };
 
-export default connect(mapStateToProps, { doctorSelectEyeDrop })(DoctorPickEyeDrop);
+export default connect(mapStateToProps, { doctorSelectEyeDrop, doctorSelectEyeDropGroup })(DoctorPickEyeDrop);

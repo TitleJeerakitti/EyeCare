@@ -3,21 +3,16 @@ import { View, Image, TextInput, StyleSheet } from 'react-native';
 import { SQLite } from 'expo';
 import { YELLOW } from '../config';
 import { Button } from './common';
+import { connect } from 'react-redux';
 
-const db = SQLite.openDatabase('eyedrops.db');
+const eyeDropdb = SQLite.openDatabase('eyedrop.db');
 
 class AddNewMed extends React.Component {
-
-    state = {
-        text: null
-    };
-
-    componentDidMount() {
-        db.transaction(tx => {
-            tx.executeSql(
-                'create table if not exists items (id integer primary key not null, img text, name text);'
-            );
-        });
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: null
+        };
     }
 
     add(text) {
@@ -26,15 +21,13 @@ class AddNewMed extends React.Component {
             return false;
         }
 
-        db.transaction(
+        eyeDropdb.transaction(
             tx => {
-                tx.executeSql('insert into items (img, name) values (?, ?)', [this.props.imagePath, text]);
+                tx.executeSql('insert into items (name, category, image) values (?, ?, ?)', [text, this.props.imagePath, category]);
                 tx.executeSql('select * from items', [], (_, { rows }) =>
                     console.log(JSON.stringify(rows))
                 );
             },
-            null,
-            this.update
         );
     }
 
@@ -82,4 +75,11 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddNewMed;
+const mapStateToProps = ({ doctor }) => {
+    const { group } = doctor;
+    return { group };
+};
+
+export default connect(mapStateToProps)(AddNewMed);
+
+//uri: Asset.fromModule(require('../images/user.png')).uri
