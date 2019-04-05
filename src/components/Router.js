@@ -16,6 +16,9 @@ import DoctorAppointment from './DoctorAppointment';
 import DoctorEyeDropGroup from './DoctorEyeDropGroup';
 import Magnifier from './Magnifier';
 import EyeDropsVideo from './EyeDropsVideo';
+import Timer from './LocalNotifications';
+import EyeCarePDF from './EyedropByMySelf';
+import GlaucomaInfoPDF from './GlaucomaInfo';
 
 class RouterComponent extends React.Component {
     render() {
@@ -68,6 +71,18 @@ class RouterComponent extends React.Component {
                             component={NewsHome} 
                             navBar={NavBar} 
                             initial 
+                        />
+                        <Scene 
+                            key='eyecarepdf' 
+                            title='การหยอดตาด้วยตนเอง' 
+                            component={EyeCarePDF}  
+                            navBar={NavBar} 
+                        />
+                        <Scene 
+                            key='glaucomapdf' 
+                            title='ข้อมูลโรคต้อหิน' 
+                            component={GlaucomaInfoPDF}  
+                            navBar={NavBar} 
                         />
                     </Scene>
                     <Scene key='etc' icon={IconTab} iconName='comment-question'>
