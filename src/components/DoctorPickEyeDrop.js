@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView, Text } from 'react-native';
-import { Asset } from 'expo';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ButtonImage, Card, ButtonIconWithText } from './common';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { SQLite } from 'expo';
+// import { Asset } from 'react-native';
+import { SQLite, Asset } from 'expo';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
@@ -19,7 +20,8 @@ const eyeDrop = [
   {
     name: 'Latanoprost 0.005%_Xalatan_Pfizer Inc.',
     category: 1,
-    image: 'Asset.fromModule(require("../images/EyeDrops/01_PROSTAGLANDIN_ANALOG/1.1.1_Latanoprost_0.005__Xalatan_Pfizer_Inc..jpg")',
+    // image: '../images/EyeDrops/01_PROSTAGLANDIN_ANALOG/1.1.1_Latanoprost_0.005__Xalatan_Pfizer_Inc..jpg',
+    image: Asset.fromModule(require('./src/images/EyeDrops/01_PROSTAGLANDIN_ANALOG/1.1.1_Latanoprost_0.005__Xalatan_Pfizer_Inc..jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2,ศัพท์แพทย์ 3',
   },
   {
@@ -70,6 +72,7 @@ export default class App extends React.Component {
     });
 
     eyeDropdb.transaction(tx => {
+      tx.executeSql('DROP TABLE IF EXISTS items');
       tx.executeSql(
         'create table if not exists items (id integer primary key not null, name text, category int ,image text, detail text)');
       this.addEyeDrop(tx);
