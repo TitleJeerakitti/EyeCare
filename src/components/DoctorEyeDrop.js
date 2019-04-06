@@ -15,27 +15,6 @@ class DoctorEyeDrop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            /*data: [
-                {
-                    name: 'Eye Dropper A',
-                    time: ['09:00', '12:00', '20:00'],
-                    eyePosition: 'LEFT',
-                    image: require('../images/eye-dropper.png'),
-                    type: ABNORMAL,
-                    //timeToDrop: 5,
-                    //timeToPush: 1,
-                    detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2', 'ศัพท์แพทย์ 3'],
-                },
-                {
-                    name: 'Eye Dropper B',
-                    time: ['09:05', '12:05'],
-                    eyePosition: 'RIGHT',
-                    image: require('../images/eye-dropper.png'),
-                    type: NORMAL,
-                    //timeToDrop: 3,
-                    detail: ['ศัพท์แพทย์ 1', 'ศัพท์แพทย์ 2'],
-                },
-            ]*/
             data: []
         };
     }
@@ -81,7 +60,7 @@ class DoctorEyeDrop extends React.Component {
     render() {
         return (
             <ScrollView>
-                
+                {this.renderEyeCard()}
                 <Card>
                     <ButtonIconWithText
                         title='สั่งยาหยอดตา'

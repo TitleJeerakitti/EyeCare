@@ -15,6 +15,7 @@ class DoctorPickEyeDrop extends React.Component {
     }
 
     onSelect(item) {
+        console.log('redux', item);
         this.props.doctorSelectEyeDrop(item);
         Actions.doctor_eyedrop_detail();
     }
