@@ -93,7 +93,7 @@ export default class App extends React.Component {
 
     appointmentdb.transaction(tx => {
       tx.executeSql(
-        'create table if not exists items (id integer primary key not null, date date, time text)');
+        'create table if not exists items (id integer primary key not null, date text, time text)');
       this.addAppointment(tx);
     });
   }

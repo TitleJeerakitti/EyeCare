@@ -44,7 +44,7 @@ class HomeScreen extends React.Component {
                             });
                         });
                 }
-            });
+            }, () => console.log('error'));
         });    
     }
 
@@ -58,7 +58,7 @@ class HomeScreen extends React.Component {
                             });
                         });
                 }
-            });
+            }, () => console.log('error'));
         });    
     }
 
