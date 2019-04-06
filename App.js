@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Asset } from 'react-native';
 import { SQLite, Asset } from 'expo';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -27,37 +26,37 @@ const eyeDrop = [
   {
     name: 'Timolol Maleate 0.5%_Timolol maleate_Alcon',
     category: 2,
-    image: 'Asset.fromModule(require("../images/EyeDrops/02_BETA_BLOCKER/2.1.1_Timolol_Maleate_0.5__Timolol_maleate_Alcon.jpg")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/02_BETA_BLOCKER/2.1.1_Timolol_Maleate_0.5__Timolol_maleate_Alcon.jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
   },
   {
     name: 'Brimonidine tartrate 0.15%_Alphagan Purite_Allergan Inc.',
     category: 3,
-    image: 'Asset.fromModule(require("../images/EyeDrops/03_ALPHA_AGONIST/3.1.1_Brimonidine_tartrate_0.15__Alphagan_Purite_Allergan_Inc..jpg")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/03_ALPHA_AGONIST/3.1.1_Brimonidine_tartrate_0.15__Alphagan_Purite_Allergan_Inc..jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
   },
   {
     name: 'Brinzolamide ophthalmic suspension 1%_Azopt_Alcon, Inc.',
     category: 4,
-    image: 'Asset.fromModule(require("../images/EyeDrops/04_CARBONIC_ANHYDARS_INHIBITOR_(CAI)/4.1_Brinzolamide_ophthalmic_suspension_1__Azopt_Alcon,_Inc..jpg")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/04_CARBONIC_ANHYDARS_INHIBITOR_(CAI)/4.1_Brinzolamide_ophthalmic_suspension_1__Azopt_Alcon,_Inc..jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
   },
   {
     name: 'Pilocarpine HCl 1%_1% Isopto atropine_Alcon, Inc.',
     category: 5,
-    image: 'Asset.fromModule(require("../images/EyeDrops/05_CHOLINERGIC_(MIOTIC)/5.1.1_Pilocarpine_HCl_1__1__Isopto_atropine_Alcon,_Inc..jpg")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/05_CHOLINERGIC_(MIOTIC)/5.1.1_Pilocarpine_HCl_1__1__Isopto_atropine_Alcon,_Inc..jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
   },
   {
     name: 'Dorzolomide HCI _ Timolol Maleate_Cosopt_Merck _ Co. Inc.',
     category: 6,
-    image: 'Asset.fromModule(require("../images/EyeDrops/06_FIXED_COMBINE_DRUG/6.1_Dorzolomide_HCI___Timolol_Maleate_Cosopt_Merck___Co._Inc..gif")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/06_FIXED_COMBINE_DRUG/6.1_Dorzolomide_HCI___Timolol_Maleate_Cosopt_Merck___Co._Inc2.jpg')).uri,
     detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
   },
   {
     name: 'Dipivefrine HCL 0.1%_Propine_Allergab',
     category: 7,
-    image: 'Asset.fromModule(require("../images/EyeDrops/07_Others/7.1_Dipivefrine_HCL_0.1__Propine_Allergab.jpg")).uri',
+    image: Asset.fromModule(require('./src/images/EyeDrops/07_Others/7.1_Dipivefrine_HCL_0.1__Propine_Allergab.jpg')).uri,
     detail: '',
   },
 ];

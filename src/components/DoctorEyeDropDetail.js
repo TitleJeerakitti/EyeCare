@@ -19,9 +19,9 @@ const timedb = SQLite.openDatabase('time.db');
 class DoctorEyeDropDetail extends React.Component {
     constructor(props) {
         super(props);
-        const { type = null, left = true, right = false } = this.props.data;
+        const { type = 0, left = 1, right = 0 } = this.props.data;
         this.state = {
-            isAbnormal: type === ABNORMAL,
+            isAbnormal: type,
             left,
             right,
             visible: false,
@@ -41,7 +41,10 @@ class DoctorEyeDropDetail extends React.Component {
                 if (_array.length > 0) {
                     _array.forEach((eachOrder) => {
                         this.setState({
-                            order: eachOrder
+                            order: eachOrder,
+                            left: eachOrder.left,
+                            right: eachOrder.right,
+                            isAbnormal: eachOrder.type
                         }, this.timeData(eachOrder));
                     });
                 }
@@ -87,18 +90,18 @@ class DoctorEyeDropDetail extends React.Component {
         //this.checkData();
     }
 
-    checkData() {
-        orderdb.transaction(tx => {
-            tx.executeSql('select * from items', [], (_, { rows }) =>
-                console.log(JSON.stringify(rows))
-            );
-        });
-        timedb.transaction(tx => {
-            tx.executeSql('select * from items', [], (_, { rows }) =>
-                console.log(JSON.stringify(rows))
-            );
-        });
-    }
+    // checkData() {
+    //     orderdb.transaction(tx => {
+    //         tx.executeSql('select * from items', [], (_, { rows }) =>
+    //             console.log(JSON.stringify(rows))
+    //         );
+    //     });
+    //     timedb.transaction(tx => {
+    //         tx.executeSql('select * from items', [], (_, { rows }) =>
+    //             console.log(JSON.stringify(rows))
+    //         );
+    //     });
+    // }
 
     renderTimeList(times = []) {
         return times.map((item, index) =>
@@ -121,7 +124,7 @@ class DoctorEyeDropDetail extends React.Component {
     render() {
         const { data } = this.props;
         const { isAbnormal, left, right, date, visible } = this.state;
-        //console.log(date);
+        //console.log(this.state);
         return (
             <View>
                 <CardImage title={data.name} source={{ uri: data.image }}>
@@ -133,7 +136,9 @@ class DoctorEyeDropDetail extends React.Component {
                     <Row>
                         <ButtonSmallText
                             onPress={() => {
-                                this.setState({ isAbnormal: !isAbnormal });
+                                this.setState({ 
+                                    isAbnormal: isAbnormal === 0 ? 1 : 0
+                                });
                                 //console.log('save change');
                             }}
                             backgroundColor={isAbnormal ? BLUE : WHITE}
@@ -144,7 +149,7 @@ class DoctorEyeDropDetail extends React.Component {
                         <ButtonSmallText
                             onPress={() => {
                                 this.setState({
-                                    left: !left
+                                    left: left === 0 ? 1 : 0
                                 });
                                 //console.log('save change');
                             }}
@@ -157,7 +162,7 @@ class DoctorEyeDropDetail extends React.Component {
                         <ButtonSmallText
                             onPress={() => {
                                 this.setState({
-                                    right: !right
+                                    right: right === 0 ? 1 : 0
                                 });
                                 //console.log('save change');
                             }}
