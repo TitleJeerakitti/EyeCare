@@ -46,7 +46,6 @@ class DoctorEyeDropGroup extends React.Component {
                     ]
                 }
             ]*/
-            group: [],
             data: []
         };
     }
@@ -62,17 +61,17 @@ class DoctorEyeDropGroup extends React.Component {
 
     groupData() {
         categorydb.transaction(tx => {
-            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => this.setState({ group: _array }, function () {
-                if (this.state.group.length > 0) {
-                    this.eyeDropData();
+            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
+                if (_array.length > 0) {
+                    this.eyeDropData(_array);
                 }
-            }));
+            });
         });    
     }
 
-    eyeDropData() {
+    eyeDropData(group) {
         eyeDropdb.transaction(tx => {
-            this.state.group.forEach((eachGroup) => {
+            group.forEach((eachGroup) => {
                 tx.executeSql('select * from items where category = ?', [eachGroup.id], (_, { rows: { _array } }) => {
                     this.setState({
                         data: this.state.data.concat({ group: eachGroup, eyeDrop: _array })

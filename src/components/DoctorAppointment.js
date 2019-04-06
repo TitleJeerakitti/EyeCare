@@ -2,8 +2,11 @@ import React from 'react';
 import { View, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Actions } from 'react-native-router-flux';
+import { SQLite } from 'expo';
 import { DARK_GRAY, BLACK, YELLOW, RED, WHITE } from '../config';
 import { Card, CardSection, Center, Button } from './common';
+
+const appointmentdb = SQLite.openDatabase('appointment.db');
 
 const datePickerStyles = {
     dateInput: { 
@@ -27,6 +30,16 @@ class DoctorAppointment extends React.Component {
             time: new Date(),
             date: new Date(),
         };
+    }
+
+    makeAppointment() {
+        appointmentdb.transaction(
+            tx => {
+              tx.executeSql('update items set date = ? where id = ?;', [this.state.date, 1]);
+              tx.executeSql('update items set time = ? where id = ?;', [this.state.time, 1]);
+            }
+          );
+        Actions.home();
     }
 
     render() {
@@ -63,7 +76,7 @@ class DoctorAppointment extends React.Component {
                 </Card>
                 <Button 
                     backgroundColor={YELLOW}
-                    onPress={() => console.log('save')}
+                    onPress={() => this.makeAppointment()}
                 >
                     บันทึก
                 </Button>

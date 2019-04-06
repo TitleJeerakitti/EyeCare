@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Image, TextInput, StyleSheet } from 'react-native';
 import { SQLite } from 'expo';
+import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import { YELLOW } from '../config';
 import { Button } from './common';
-import { connect } from 'react-redux';
+import { doctorSelectEyeDrop } from '../actions';
 
 const eyeDropdb = SQLite.openDatabase('eyedrop.db');
 
@@ -11,24 +13,37 @@ class AddNewMed extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: null
+            name: null,
+            detail: '',
+            group: this.props.group
         };
     }
 
-    add(text) {
+    add(name, detail) {
         // is text empty?
-        if (text === null || text === '') {
+        if (name === null || name === '') {
             return false;
         }
 
         eyeDropdb.transaction(
             tx => {
-                tx.executeSql('insert into items (name, category, image) values (?, ?, ?)', [text, this.props.imagePath, category]);
-                tx.executeSql('select * from items', [], (_, { rows }) =>
-                    console.log(JSON.stringify(rows))
-                );
+                tx.executeSql('insert into items (name, category, image, detail) values (?,?,?,?)', [name, this.state.group.id, this.props.imagePath, detail], 
+                (_, { insertId }) => {
+                    tx.executeSql('select * from items where id = ?', [insertId], (__, { rows: { _array } }) => {
+                        if (_array.length === 1) {
+                            _array.forEach((eyedrop) => {
+                                    this.goDetail(eyedrop);
+                                });
+                        }
+                    });
+                });
             },
         );
+    }
+
+    goDetail(item) {
+        this.props.doctorSelectEyeDrop(item);
+        Actions.doctor_eyedrop_detail();
     }
 
     render() {
@@ -40,17 +55,24 @@ class AddNewMed extends React.Component {
                 />
                 <View style={styles.flexRow}>
                     <TextInput
-                        onChangeText={text => this.setState({ text })}
+                        onChangeText={name => this.setState({ name })}
                         placeholder="Name"
                         style={styles.input}
-                        value={this.state.text}
+                        value={this.state.name}
+                    />
+                </View>
+                <View style={styles.flexRow}>
+                    <TextInput
+                        onChangeText={detail => this.setState({ detail })}
+                        placeholder="Details (separate with ,)"
+                        style={styles.input}
+                        value={this.state.detail}
                     />
                 </View>
                 <Button
                     backgroundColor={YELLOW}
                     onPress={() => {
-                        this.add(this.state.text);
-                        this.setState({ text: null });
+                        this.add(this.state.name, this.state.detail);
                     }}
                 >
                     บันทึก
@@ -80,6 +102,6 @@ const mapStateToProps = ({ doctor }) => {
     return { group };
 };
 
-export default connect(mapStateToProps)(AddNewMed);
+export default connect(mapStateToProps, { doctorSelectEyeDrop })(AddNewMed);
 
 //uri: Asset.fromModule(require('../images/user.png')).uri

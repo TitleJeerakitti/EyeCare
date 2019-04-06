@@ -1,5 +1,6 @@
 import React from 'react';
-import { ScrollView, Text, } from 'react-native';
+import { ScrollView, Text } from 'react-native';
+import { Asset } from 'expo';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ButtonImage, Card, ButtonIconWithText } from './common';
@@ -34,13 +35,13 @@ class DoctorPickEyeDrop extends React.Component {
         return this.state.data.map((item, index) => 
             <ButtonImage
                 key={index}
-                source={item.image}
+                source={{ uri: item.image }}
                 onPress={() => this.onSelect(item)}
                 title={item.name}
                 notHorizontal
             >
                 <Card>
-                    {this.renderDetail(item.detail)}
+                    {this.renderDetail(item.detail.split(','))}
                 </Card>
             </ButtonImage>
         );
@@ -56,7 +57,7 @@ class DoctorPickEyeDrop extends React.Component {
                         iconName='camera-alt'
                         iconBg={BLACK}
                         iconColor={WHITE}
-                        onPress={() => this.onClick(null, this.props.group)}
+                        onPress={() => this.onClick(this.props.data, this.props.group)}
                     />
                 </Card>
             </ScrollView>

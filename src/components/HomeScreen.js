@@ -1,8 +1,14 @@
 import React from 'react';
 import { View, ScrollView, } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { SQLite } from 'expo';
+import { NavigationEvents } from "react-navigation";
 import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
 import { BLUE, YELLOW, RED } from '../config';
+
+
+const patientdb = SQLite.openDatabase('patient.db');
+const appointmentdb = SQLite.openDatabase('appointment.db');
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -22,6 +28,40 @@ class HomeScreen extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.patientData();
+        this.appointmentData();
+    }
+
+    patientData() {
+        patientdb.transaction(tx => {
+            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
+                if (_array.length === 1) {
+                    _array.forEach((user) => {
+                            const age = new Date().getFullYear() - user.birthday.substring(user.birthday.length - 4, user.birthday.length);
+                            this.setState({
+                                patient: { name: `${user.name} ${user.surname}`, age }
+                            });
+                        });
+                }
+            });
+        });    
+    }
+
+    appointmentData() {
+        appointmentdb.transaction(tx => {
+            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
+                if (_array.length === 1) {
+                    _array.forEach((item) => {
+                            this.setState({
+                                appointment: { date: item.date, time: item.time, place: 'โรงพยาบาลธรรมศาสตร์' }
+                            });
+                        });
+                }
+            });
+        });    
+    }
+
     renderTimeSlot(data) {
         return data.map((item, index) => 
             <TimeCard key={index}>{item}</TimeCard>
@@ -31,6 +71,11 @@ class HomeScreen extends React.Component {
     render() {
         return (
             <ScrollView>
+                <NavigationEvents
+                    onWillFocus={() => {
+                        this.componentDidMount();
+                    }}
+                />
                 <ButtonImage
                     onPress={() => Actions.edit_profile()}
                     source={require('../images/user.png')}
