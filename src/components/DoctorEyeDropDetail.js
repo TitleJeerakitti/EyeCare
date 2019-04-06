@@ -25,9 +25,10 @@ class DoctorEyeDropDetail extends React.Component {
             left,
             right,
             visible: false,
-            date: '09.00',
+            date: '09:00',
             order: null,
-            time: null,
+            time: [],
+            select: null,
         };
     }
 
@@ -64,7 +65,18 @@ class DoctorEyeDropDetail extends React.Component {
         });
     }
 
-    addTime() {
+    updateOrder() {
+        if (this.state.order !== null) {
+            orderdb.transaction(tx => {
+                tx.executeSql('update items set doctorID = ? where id = ?', [1, this.state.order.id]);
+                tx.executeSql('update items set left = ? where id = ?', [this.state.left, this.state.order.id]);
+                tx.executeSql('update items set right = ? where id = ?', [this.state.right, this.state.order.id]);
+                tx.executeSql('update items set type = ? where id = ?', [this.state.isAbnormal, this.state.order.id]);
+            });
+        }
+    }
+
+    addTime(select) {
         if (this.state.order === null) {
             orderdb.transaction(tx => {
                 tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date(), new Date(), this.state.left, this.state.right, this.state.isAbnormal],
@@ -82,35 +94,40 @@ class DoctorEyeDropDetail extends React.Component {
                 tx.executeSql('update items set right = ? where id = ?', [this.state.right, this.state.order.id]);
                 tx.executeSql('update items set type = ? where id = ?', [this.state.isAbnormal, this.state.order.id]);
             });
+            const duplicate = () => {
+                let dup = false;
+                this.state.time.forEach((item) => {             
+                    if (this.state.date === item.time) {
+                        dup = true;
+                    }
+                });
+                return dup;
+            };
             timedb.transaction(tx => {
-                tx.executeSql('insert into items (orderID, time) values (?,?)', [this.state.order.id, this.state.date]);
+            if (select === null) {
+                if (!duplicate()) {
+                    tx.executeSql('insert into items (orderID, time) values (?,?)', [this.state.order.id, this.state.date]);
+                }
+            } else if (select.time !== this.state.date) {
+                if (duplicate()) {
+                    tx.executeSql('delete from items where id = ?', [select.id]);
+            } else {
+                    tx.executeSql('update items set time = ? where id = ?', [this.state.date, select.id]);
+                }
+            }
             });
         }
         this.orderData();
-        //this.checkData();
     }
-
-    // checkData() {
-    //     orderdb.transaction(tx => {
-    //         tx.executeSql('select * from items', [], (_, { rows }) =>
-    //             console.log(JSON.stringify(rows))
-    //         );
-    //     });
-    //     timedb.transaction(tx => {
-    //         tx.executeSql('select * from items', [], (_, { rows }) =>
-    //             console.log(JSON.stringify(rows))
-    //         );
-    //     });
-    // }
 
     renderTimeList(times = []) {
         return times.map((item, index) =>
             <Button
                 key={index}
-                onPress={() => this.setState({ date: item, visible: true })}
+                onPress={() => this.setState({ date: item.time, select: item, visible: true })}
                 backgroundColor={WHITE}
             >
-                {item}
+                {item.time}
             </Button>
         );
     }
@@ -124,7 +141,6 @@ class DoctorEyeDropDetail extends React.Component {
     render() {
         const { data } = this.props;
         const { isAbnormal, left, right, date, visible } = this.state;
-        //console.log(this.state);
         return (
             <View>
                 <CardImage title={data.name} source={{ uri: data.image }}>
@@ -139,6 +155,7 @@ class DoctorEyeDropDetail extends React.Component {
                                 this.setState({ 
                                     isAbnormal: isAbnormal === 0 ? 1 : 0
                                 });
+                                this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={isAbnormal ? BLUE : WHITE}
@@ -151,6 +168,7 @@ class DoctorEyeDropDetail extends React.Component {
                                 this.setState({
                                     left: left === 0 ? 1 : 0
                                 });
+                                this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={left ? BLUE : WHITE}
@@ -164,6 +182,7 @@ class DoctorEyeDropDetail extends React.Component {
                                 this.setState({
                                     right: right === 0 ? 1 : 0
                                 });
+                                this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={right ? BLUE : WHITE}
@@ -173,7 +192,7 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                     </Row>
                 </Card>
-                {this.renderTimeList(data.time)}
+                {this.renderTimeList(this.state.time)}
                 <Card>
                     <ButtonIconWithText
                         title='เพิ่มเวลาหยอดตา'
@@ -187,8 +206,8 @@ class DoctorEyeDropDetail extends React.Component {
                     date={date}
                     visible={visible}
                     onDateChange={(time) => this.setState({ date: time })}
-                    onCancel={() => this.setState({ visible: false })}
-                    onConfirm={() => this.addTime()}
+                    onCancel={() => this.setState({ visible: false, select: null })}
+                    onConfirm={() => { this.addTime(this.state.select); this.setState({ visible: false, select: null }); }}
                 />
             </View>
         );

@@ -10,6 +10,7 @@ import { doctorSelectEyeDrop } from '../actions';
 
 const orderdb = SQLite.openDatabase('order.db');
 const timedb = SQLite.openDatabase('time.db');
+const eyeDropdb = SQLite.openDatabase('eyedrop.db');
 
 class DoctorEyeDrop extends React.Component {
     constructor(props) {
@@ -23,9 +24,15 @@ class DoctorEyeDrop extends React.Component {
         this.orderData();
     }
 
-    onClickEyeCard(item) {
-        this.props.doctorSelectEyeDrop(item);
-        Actions.doctor_eyedrop_detail();
+    onClickEyeCard(eyeDropID) {
+            eyeDropdb.transaction(tx => {
+                    tx.executeSql('select * from items where id = ?', [eyeDropID], (_, { rows: { _array } }) => {
+                        if (_array.length > 0) {
+                            this.props.doctorSelectEyeDrop(_array[0]);
+                            Actions.doctor_eyedrop_detail();
+                        }
+                    });
+                });
     }
 
     orderData() {
@@ -53,7 +60,7 @@ class DoctorEyeDrop extends React.Component {
 
     renderEyeCard() {
         return this.state.data.map((item, index) => 
-            <EyeCard key={index} item={item} onPress={() => this.onClickEyeCard(item)} />
+            <EyeCard key={index} item={item} onPress={() => this.onClickEyeCard(item.order.eyeDropID)} />
         );
     }
 

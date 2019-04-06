@@ -53,26 +53,6 @@ class EyeCard extends React.Component {
         );
     }
 
-    renderTimeInfo(isTrue) {
-        const { item } = this.props;
-        return (
-            <Row>
-                <Center style={{ flex: 1 }} >
-                    {this.renderTimeSlot(item.time)}
-                </Center>
-                <Center style={{ flex: 1 }} >
-                    <Row>
-                        {this.renderEyePosition(item.eyePosition === 'LEFT')}
-                        {this.renderEyePosition(item.eyePosition === 'RIGHT')}
-                    </Row>
-                    <TextContent>
-                        {item.eyePosition === 'LEFT' ? 'ตาซ้าย' : 'ตาขวา'}
-                    </TextContent>
-                </Center>
-            </Row>
-        );
-    }
-
     renderTimeSlot(times) {
         return times.map((time, index) => 
             <TimeCard key={index}>{time.time}</TimeCard>

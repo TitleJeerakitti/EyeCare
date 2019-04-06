@@ -37,12 +37,10 @@ class HomeScreen extends React.Component {
         patientdb.transaction(tx => {
             tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
                 if (_array.length === 1) {
-                    _array.forEach((user) => {
-                            const age = new Date().getFullYear() - user.birthday.substring(user.birthday.length - 4, user.birthday.length);
-                            this.setState({
-                                patient: { name: `${user.name} ${user.surname}`, age }
-                            });
-                        });
+                    const age = new Date().getFullYear() - _array[0].birthday.substring(_array[0].birthday.length - 4, _array[0].birthday.length);
+                    this.setState({
+                        patient: { name: `${_array[0].name} ${_array[0].surname}`, age }
+                    });
                 }
             }, () => console.log('error'));
         });    
@@ -52,10 +50,8 @@ class HomeScreen extends React.Component {
         appointmentdb.transaction(tx => {
             tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
                 if (_array.length === 1) {
-                    _array.forEach((item) => {
-                            this.setState({
-                                appointment: { date: item.date, time: item.time, place: 'โรงพยาบาลธรรมศาสตร์' }
-                            });
+                        this.setState({
+                            appointment: { date: _array[0].date, time: _array[0].time, place: 'โรงพยาบาลธรรมศาสตร์' }
                         });
                 }
             }, () => console.log('error'));

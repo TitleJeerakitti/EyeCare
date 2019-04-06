@@ -1,41 +1,62 @@
 import React from 'react';
 import { ScrollView, } from 'react-native';
+import { SQLite } from 'expo';
+import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import { 
     TextHeader, 
     Card,
 } from './common';
 import EyeCard from './special/EyeCard';
 import { NORMAL, ABNORMAL } from '../config';
+import { selectEyeDrop } from '../actions';
+
+const orderdb = SQLite.openDatabase('order.db');
+const timedb = SQLite.openDatabase('time.db');
 
 class EyeDropper extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            data: [
-                {
-                    name: 'Eye Dropper A',
-                    time: ['09:00', '12:00', '20:00'],
-                    eyePosition: 'LEFT',
-                    image: require('../images/eye-dropper.png'),
-                    type: ABNORMAL,
-                    timeToDrop: 5,
-                    timeToPush: 1,
-                },
-                {
-                    name: 'Eye Dropper B',
-                    time: ['09:05', '12:05'],
-                    eyePosition: 'RIGHT',
-                    image: require('../images/eye-dropper.png'),
-                    type: NORMAL,
-                    timeToDrop: 3,
-                },
-            ]
+        this.state = { 
+            data: [],
         };
     }
 
+    componentDidMount() {
+        this.orderData();
+    }
+
+    onClickEyeCard(item) {
+        this.props.selectEyeDrop(item);
+        Actions.stopwatch();
+    }
+
+    orderData() {
+        orderdb.transaction(tx => {
+            tx.executeSql('select * from items where patientID = 1', [], (_, { rows: { _array } }) => {
+                if (_array.length > 0) {
+                    this.timeData(_array);
+                }
+            });
+        });    
+    }
+
+    timeData(order) {
+        timedb.transaction(tx => {
+            order.forEach((eachOrder) => {
+                tx.executeSql('select * from items where orderID = ?', [eachOrder.id], (_, { rows: { _array } }) => {
+                    this.setState({
+                        data: this.state.data.concat({ order: eachOrder, time: _array })
+                    }, /*console.log(this.state.data)*/);
+                    console.log(this.state.data);
+                });
+            });
+        });  
+    }
+
     renderEyeCard() {
-        return this.state.data.map((item, index) =>
-            <EyeCard key={index} item={item} />
+        return this.state.data.map((item, index) => 
+            <EyeCard key={index} item={item} onPress={() => this.onClickEyeCard(item)} />
         );
     }
 
@@ -53,4 +74,4 @@ class EyeDropper extends React.Component {
     }
 }
 
-export default EyeDropper;
+export default connect(null, { selectEyeDrop })(EyeDropper);

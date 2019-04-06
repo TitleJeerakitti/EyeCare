@@ -31,9 +31,7 @@ class AddNewMed extends React.Component {
                 (_, { insertId }) => {
                     tx.executeSql('select * from items where id = ?', [insertId], (__, { rows: { _array } }) => {
                         if (_array.length === 1) {
-                            _array.forEach((eyedrop) => {
-                                    this.goDetail(eyedrop);
-                                });
+                                this.goDetail(_array[0]);
                         }
                     });
                 });

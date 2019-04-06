@@ -2,10 +2,10 @@ import React from 'react';
 import { View, } from 'react-native';
 import { connect } from 'react-redux'; 
 import { Timer } from 'react-native-stopwatch-timer';
+import { Actions } from 'react-native-router-flux';
 import { Card, Center, Button, TextContent } from './common';
 import EyeCard from './special/EyeCard';
 import { NORMAL, YELLOW, BLUE, WHITE, RED, ABNORMAL, } from '../config';
-import { Actions } from 'react-native-router-flux';
 
 class StopWatch extends React.Component {
     constructor(props) {
@@ -17,55 +17,48 @@ class StopWatch extends React.Component {
             timerReset: false,
             totalDurationAbnormal: 60000,
             timerStartAbnormal: false,
-            timerResetAbnormal: false,
-            isSecond: this.props.data.type === NORMAL,
+            timerResetAbnormal: true,
+            isSecond: this.props.data.order.type === 0,
         };
     }
 
     renderTimer() {
-        if (this.props.data.type === ABNORMAL) {  
+        if (this.props.data.order.type) {  
+            const { 
+                timerStartAbnormal, 
+                timerResetAbnormal,
+            } = this.state;
             return (
-                <Card>
-                    <Center>
+                <View>
+                    <Card>
+                        <Center>
                             <TextContent>กดหัวตา</TextContent>
-                        <Timer 
-                            totalDuration={this.state.totalDurationAbnormal} 
-                            start={this.state.timerStartAbnormal} 
-                            reset={this.state.timerResetAbnormal} 
-                            handleFinish={() => this.setState({ 
-                                isSecond: true, 
-                                timerStartAbnormal: false 
-                            })}
-                        />
-                    </Center>
-                </Card>
+                            <Timer 
+                                totalDuration={this.state.totalDurationAbnormal} 
+                                start={this.state.timerStartAbnormal} 
+                                reset={this.state.timerResetAbnormal} 
+                                handleFinish={() => this.setState({ 
+                                    isSecond: true, 
+                                    timerStartAbnormal: false 
+                                })}
+                            />   
+                        </Center>  
+                    </Card>
+                    <Button 
+                        onPress={() => this.setState(timerResetAbnormal ? { 
+                            timerStartAbnormal: !timerStartAbnormal, 
+                            timerResetAbnormal: true,
+                        } : {
+                            timerStartAbnormal: !timerStartAbnormal, 
+                            timerResetAbnormal: false 
+                        })}
+                        backgroundColor={YELLOW}
+                    >   
+                        {timerStartAbnormal ? 'จับเวลาใหม่' : 'เริ่มจับเวลา'}
+                    </Button> 
+                </View>
             );
         }
-    }
-
-    renderStateButton(){
-        const {
-            timerStart,  
-            isSecond, 
-            timerStartAbnormal,
-        } = this.state;
-        if (this.props.data.type === ABNORMAL){
-            return(
-                <Button 
-                    onPress={() => this.setState(isSecond ? { 
-                        timerStart: !timerStart, 
-                        timerReset: false 
-                    } : {
-                        timerStartAbnormal: !timerStartAbnormal, 
-                        timerResetAbnormal: false 
-                    })}
-                    backgroundColor={YELLOW}
-                >
-                {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
-                </Button>
-            );
-        }
-        return null
     }
 
     renderStopWatch() {
@@ -77,39 +70,39 @@ class StopWatch extends React.Component {
             isSecond, 
             timerStartAbnormal, 
         } = this.state;
-        if (!isNow) {
-            return (
-                <View>
-                    <Button 
-                        onPress={() => this.setState({ isNow: true })}
-                        backgroundColor={BLUE} 
-                        color={WHITE}
-                    >
-                        หยอดยาตอนนี้
-                    </Button>
-                    <Button
-                        onPress={() => Actions.home()}
-                        backgroundColor={BLUE} 
-                        color={WHITE}
-                    >
-                        เลื่อนเวลาหยอดตา
-                    </Button>
-                    <Button
-                        onPress={() => Actions.home()}
-                        backgroundColor={BLUE} 
-                        color={WHITE}
-                    >
-                        หยอดตาแล้ว
-                    </Button>
-                </View>
-            );
-        }
+        // if (!isNow) {
+        //     return (
+        //         <View>
+        //             <Button 
+        //                 onPress={() => this.setState({ isNow: true })}
+        //                 backgroundColor={BLUE} 
+        //                 color={WHITE}
+        //             >
+        //                 หยอดยาตอนนี้
+        //             </Button>
+        //             <Button
+        //                 onPress={() => console.log('change time')}
+        //                 backgroundColor={BLUE} 
+        //                 color={WHITE}
+        //             >
+        //                 เลื่อนเวลาหยอดตา
+        //             </Button>
+        //             <Button
+        //                 onPress={() => console.log('already dropped')}
+        //                 backgroundColor={BLUE} 
+        //                 color={WHITE}
+        //             >
+        //                 หยอดตาแล้ว
+        //             </Button>
+        //         </View>
+        //     );
+        // }
         return (
             <View>
                 {this.renderTimer()}
                 {/* <Card>
                     <Center>
-                        <TextContent>หยอดตา</TextContent>
+                            <TextContent>หยอดตา</TextContent>
                         <Timer 
                             totalDuration={totalDuration} 
                             start={timerStart} 
@@ -120,10 +113,21 @@ class StopWatch extends React.Component {
                             }}
                         />
                     </Center>
-                </Card> */}
-                {this.renderStateButton()}
+                </Card>
                 <Button 
-                    onPress={() => Actions.home()}
+                    onPress={() => this.setState(isSecond ? { 
+                        timerStart: !timerStart, 
+                        timerReset: false 
+                    } : {
+                        timerStartAbnormal: !timerStartAbnormal, 
+                        timerResetAbnormal: false 
+                    })}
+                    backgroundColor={YELLOW}
+                >
+                    {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
+                </Button> */}
+                <Button 
+                    onPress={() => { console.log('success'); Actions.home(); }}
                     backgroundColor={BLUE}
                     color={WHITE}
                 >
@@ -137,7 +141,7 @@ class StopWatch extends React.Component {
                     //     timerResetAbnormal: true, 
                     //     timerStartAbnormal: false 
                     // })}
-                    onPress={() => Actions.home()}
+                    onPress={() => { console.log('cancel'); Actions.home(); }}
                     backgroundColor={RED}
                     color={WHITE}
                 >
@@ -154,7 +158,6 @@ class StopWatch extends React.Component {
                 <EyeCard
                     item={data}
                     disabled
-                    TimeInfo={true}
                 />
                 {this.renderStopWatch()}
             </View>

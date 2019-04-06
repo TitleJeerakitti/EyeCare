@@ -11,8 +11,8 @@ export default class EyeCarePDF extends React.Component {
           source={{uri : Asset.fromModule(require("../../assets/EyesCare-2.pdf")).uri}}
         /> */}
         <Image
-          style={{width: Dimensions.get('window').width, height: Dimensions.get('window').width*0.764583}}
-          source = {require("../../assets/EyesCare.jpg")}
+          style={{ width: Dimensions.get('window').width, height: Dimensions.get('window').width * 0.764583 }}
+          source={require('../../assets/EyesCare.jpg')}
         />
       </ScrollView>
     );
