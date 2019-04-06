@@ -16,6 +16,8 @@ import DoctorAppointment from './DoctorAppointment';
 import DoctorEyeDropGroup from './DoctorEyeDropGroup';
 import Magnifier from './Magnifier';
 import EyeDropsVideo from './EyeDropsVideo';
+import DoctorTakePhoto from './DoctorTakePhoto';
+import AddNewMed from './AddNewMed';
 
 class RouterComponent extends React.Component {
     render() {
@@ -131,6 +133,20 @@ class RouterComponent extends React.Component {
                             key='doctor_make_appointment'
                             title='นัดพบแพทย์'
                             component={DoctorAppointment}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='doctor_take_photo'
+                            title='ถ่ายรูป'
+                            component={DoctorTakePhoto}
+                            navBar={NavBar}
+                            onBack
+                        />
+                        <Scene 
+                            key='add_new_med'
+                            title='New Medicine'
+                            component={AddNewMed}
                             navBar={NavBar}
                             onBack
                         />

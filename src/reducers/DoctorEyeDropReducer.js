@@ -8,9 +8,9 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case DOCTOR_SELECT_EYEDROP:
-            return { data: action.payload };
+            return { ...state, data: action.payload };
         case DOCTOR_SELECT_EYEDROP_GROUP:
-            return { group: action.payload };
+            return { group: action.payload.group, data: action.payload.data };
         default:
             return state;
     }

@@ -7,9 +7,9 @@ export const doctorSelectEyeDrop = (data) => {
     };
 };
 
-export const doctorSelectEyeDropGroup = (data) => {
+export const doctorSelectEyeDropGroup = (data, group) => {
     return {
         type: DOCTOR_SELECT_EYEDROP_GROUP,
-        payload: data,
+        payload: { data, group },
     };
 };

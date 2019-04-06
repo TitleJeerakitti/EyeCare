@@ -1,22 +1,28 @@
 import React from 'react';
-import { ScrollView, Text, } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { ButtonImage, Card, ButtonIconWithText } from './common';
 import { BLACK, WHITE } from '../config';
-import { doctorSelectEyeDrop } from '../actions';
+import { doctorSelectEyeDrop, doctorSelectEyeDropGroup } from '../actions';
 
 class DoctorPickEyeDrop extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.group,
+            data: this.props.data,
         };
     }
 
     onSelect(item) {
+        console.log('redux', item);
         this.props.doctorSelectEyeDrop(item);
         Actions.doctor_eyedrop_detail();
+    }
+
+    onClick(item, category) {
+        this.props.doctorSelectEyeDropGroup(item, category);
+        Actions.doctor_take_photo();
     }
 
     renderDetail(details) {
@@ -29,13 +35,13 @@ class DoctorPickEyeDrop extends React.Component {
         return this.state.data.map((item, index) => 
             <ButtonImage
                 key={index}
-                source={item.image}
+                source={{ uri: item.image }}
                 onPress={() => this.onSelect(item)}
                 title={item.name}
                 notHorizontal
             >
                 <Card>
-                    {this.renderDetail(item.detail)}
+                    {this.renderDetail(item.detail.split(','))}
                 </Card>
             </ButtonImage>
         );
@@ -51,7 +57,7 @@ class DoctorPickEyeDrop extends React.Component {
                         iconName='camera-alt'
                         iconBg={BLACK}
                         iconColor={WHITE}
-                        onPress={() => console.log('camera taking')}
+                        onPress={() => this.onClick(this.props.data, this.props.group)}
                     />
                 </Card>
             </ScrollView>
@@ -60,8 +66,8 @@ class DoctorPickEyeDrop extends React.Component {
 }
 
 const mapStateToProps = ({ doctor }) => {
-    const { group } = doctor;
-    return { group };
+    const { group, data } = doctor;
+    return { group, data };
 };
 
-export default connect(mapStateToProps, { doctorSelectEyeDrop })(DoctorPickEyeDrop);
+export default connect(mapStateToProps, { doctorSelectEyeDrop, doctorSelectEyeDropGroup })(DoctorPickEyeDrop);

@@ -1,11 +1,13 @@
 import React from 'react';
 import { ScrollView, Image, Dimensions, KeyboardAvoidingView, } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { SQLite } from 'expo';
 import { Card, CardSection, InputWithText, Button, Space } from './common';
 import { YELLOW, RED, WHITE } from '../config';
 
 const WIDTH = Dimensions.get('window').width;
 const IMAGE_SIZE = WIDTH * 0.25;
+const patientdb = SQLite.openDatabase('patient.db');
 
 class EditProfile extends React.Component {
     constructor(props) {
@@ -19,6 +21,44 @@ class EditProfile extends React.Component {
             disease: 'Allergic Disease',
         };
     }
+
+    componentDidMount() {
+        this.userData();
+    }
+
+    userData() {
+        patientdb.transaction(tx => {
+            tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
+                if (_array.length === 1) {
+                    _array.forEach((user) => {
+                            this.setState({
+                                name: user.name,
+                                surname: user.surname,
+                                birthday: user.birthday,
+                                phoneNumber: user.phoneNumber,
+                                allergic: user.allergic,
+                                disease: user.disease
+                            });
+                        });
+                }
+            });
+        });    
+    }
+
+    saveProfile() {
+        patientdb.transaction(
+            tx => {
+              tx.executeSql('update items set name = ? where id = ?;', [this.state.name, 1]);
+              tx.executeSql('update items set surname = ? where id = ?;', [this.state.surname, 1]);
+              tx.executeSql('update items set birthday = ? where id = ?;', [this.state.birthday, 1]);
+              tx.executeSql('update items set phoneNumber = ? where id = ?;', [this.state.phoneNumber, 1]);
+              tx.executeSql('update items set allergic = ? where id = ?;', [this.state.allergic, 1]);
+              tx.executeSql('update items set disease = ? where id = ?;', [this.state.disease, 1]);
+            }
+          );
+        Actions.home();
+    }
+
     render() {
         const { name, surname, birthday, phoneNumber, allergic, disease } = this.state;
         return (
@@ -81,7 +121,7 @@ class EditProfile extends React.Component {
                         </CardSection>
                     </Card>
                     <Button 
-                        onPress={() => console.log('save')}
+                        onPress={() => this.saveProfile()}
                         backgroundColor={YELLOW}
                     >
                         บันทึกข้อมูล
