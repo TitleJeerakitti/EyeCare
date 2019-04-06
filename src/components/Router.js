@@ -17,7 +17,7 @@ import DoctorEyeDropGroup from './DoctorEyeDropGroup';
 import Magnifier from './Magnifier';
 import EyeDropsVideo from './EyeDropsVideo';
 import Timer from './LocalNotifications';
-import EyeCarePDF from './EyedropByMySelf';
+import EyeCarePDF from './EyedropInfo';
 import GlaucomaInfoPDF from './GlaucomaInfo';
 
 class RouterComponent extends React.Component {
