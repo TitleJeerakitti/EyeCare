@@ -42,14 +42,34 @@ class EyeCard extends React.Component {
 
     renderEyePosition(isTrue) {
         return (
-            <Image 
-                source={EyeImage} 
-                style={{ 
-                    ...styles.imageStyle, 
+            <Image
+                source={EyeImage}
+                style={{
+                    ...styles.imageStyle,
                     // opacity: isTrue ? 1 : 0.5,
                     tintColor: isTrue ? 'red' : '#CCC',
-                }} 
+                }}
             />
+        );
+    }
+
+    renderTimeInfo(isTrue) {
+        const { item } = this.props;
+        return (
+            <Row>
+                <Center style={{ flex: 1 }} >
+                    {this.renderTimeSlot(item.time)}
+                </Center>
+                <Center style={{ flex: 1 }} >
+                    <Row>
+                        {this.renderEyePosition(item.eyePosition === 'LEFT')}
+                        {this.renderEyePosition(item.eyePosition === 'RIGHT')}
+                    </Row>
+                    <TextContent>
+                        {item.eyePosition === 'LEFT' ? 'ตาซ้าย' : 'ตาขวา'}
+                    </TextContent>
+                </Center>
+            </Row>
         );
     }
 
@@ -104,8 +124,8 @@ class EyeCard extends React.Component {
 
 const styles = {
     imageStyle: {
-        width: imageSize, 
-        height: imageSize, 
+        width: imageSize,
+        height: imageSize,
         marginHorizontal: 5,
     }
 };
