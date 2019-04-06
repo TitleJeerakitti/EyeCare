@@ -11,7 +11,7 @@ class StopWatch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isNow: false,
+            isNow: true,
             totalDuration: 5000,
             timerStart: false,
             timerReset: false,
@@ -70,33 +70,33 @@ class StopWatch extends React.Component {
             isSecond, 
             timerStartAbnormal, 
         } = this.state;
-        // if (!isNow) {
-        //     return (
-        //         <View>
-        //             <Button 
-        //                 onPress={() => this.setState({ isNow: true })}
-        //                 backgroundColor={BLUE} 
-        //                 color={WHITE}
-        //             >
-        //                 หยอดยาตอนนี้
-        //             </Button>
-        //             <Button
-        //                 onPress={() => console.log('change time')}
-        //                 backgroundColor={BLUE} 
-        //                 color={WHITE}
-        //             >
-        //                 เลื่อนเวลาหยอดตา
-        //             </Button>
-        //             <Button
-        //                 onPress={() => console.log('already dropped')}
-        //                 backgroundColor={BLUE} 
-        //                 color={WHITE}
-        //             >
-        //                 หยอดตาแล้ว
-        //             </Button>
-        //         </View>
-        //     );
-        // }
+        if (!isNow) {
+            return (
+                <View>
+                    <Button 
+                        onPress={() => this.setState({ isNow: true })}
+                        backgroundColor={BLUE} 
+                        color={WHITE}
+                    >
+                        หยอดยาตอนนี้
+                    </Button>
+                    <Button
+                        onPress={() => console.log('change time')}
+                        backgroundColor={BLUE} 
+                        color={WHITE}
+                    >
+                        เลื่อนเวลาหยอดตา
+                    </Button>
+                    <Button
+                        onPress={() => console.log('already dropped')}
+                        backgroundColor={BLUE} 
+                        color={WHITE}
+                    >
+                        หยอดตาแล้ว
+                    </Button>
+                </View>
+            );
+        }
         return (
             <View>
                 {this.renderTimer()}

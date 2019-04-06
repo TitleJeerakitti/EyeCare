@@ -9,6 +9,8 @@ import { BLUE, YELLOW, RED } from '../config';
 
 const patientdb = SQLite.openDatabase('patient.db');
 const appointmentdb = SQLite.openDatabase('appointment.db');
+const orderdb = SQLite.openDatabase('order.db');
+const timedb = SQLite.openDatabase('time.db');
 
 class HomeScreen extends React.Component {
     constructor(props) {
@@ -18,8 +20,8 @@ class HomeScreen extends React.Component {
                 name: 'นาย สมชาย สุดหล่อ',
                 age: '62',
             },
-            leftEye: ['09:00', '12:00', '18:00'],
-            rightEye: ['10:00', '16:00'],
+            leftEye: [],
+            rightEye: [],
             appointment: {
                 date: '30 พฤศจิกายน 2562',
                 time: '16:00',
@@ -31,6 +33,7 @@ class HomeScreen extends React.Component {
     componentDidMount() {
         this.patientData();
         this.appointmentData();
+        this.orderData();
     }
 
     patientData() {
@@ -58,6 +61,35 @@ class HomeScreen extends React.Component {
         });    
     }
 
+    orderData() {
+        orderdb.transaction(tx => {
+            tx.executeSql('select * from items where patientID = 1', [], (_, { rows: { _array } }) => {
+                if (_array.length > 0) {
+                    _array.forEach((eachOrder) => this.timeData(eachOrder));
+                    }
+                }, () => console.log('error'));
+        });
+    }
+
+    timeData(eachOrder) {
+        timedb.transaction(tx => {
+            tx.executeSql('select * from items where orderID = ?', [eachOrder.id], (_, { rows: { _array } }) => {
+                if (_array.length > 0) {
+                    _array.forEach((eachTime) => this.getTime(eachTime.time, eachOrder.left, eachOrder.right));
+                    }
+            }, () => console.log('error'));
+        });
+    }
+
+    getTime(time, left, right) {
+        if (left === 1) {
+            this.setState(this.state.leftEye.includes(time) ? null : { leftEye: this.state.leftEye.concat(time) });
+        }
+        if (right === 1) {
+            this.setState(this.state.rightEye.includes(time) ? null : { rightEye: this.state.rightEye.concat(time) });
+        }
+    }
+
     renderTimeSlot(data) {
         return data.map((item, index) => 
             <TimeCard key={index}>{item}</TimeCard>
@@ -65,11 +97,18 @@ class HomeScreen extends React.Component {
     }
 
     render() {
+        const { leftEye, rightEye } = this.state;
         return (
             <ScrollView>
                 <NavigationEvents
                     onWillFocus={() => {
                         this.componentDidMount();
+                    }}
+                    onDidBlur={() => {
+                        this.setState({
+                            leftEye: [],
+                            rightEye: []
+                        });
                     }}
                 />
                 <ButtonImage
@@ -90,11 +129,11 @@ class HomeScreen extends React.Component {
                     <Row>
                         <View style={{ flex: 1, alignItems: 'center', }}>
                             <TextContent>ตาซ้าย</TextContent>
-                            {this.renderTimeSlot(this.state.leftEye)}
+                            {this.renderTimeSlot(leftEye.sort())}
                         </View>
                         <View style={{ flex: 1, alignItems: 'center', }}>
                             <TextContent>ตาขวา</TextContent>
-                            {this.renderTimeSlot(this.state.rightEye)}
+                            {this.renderTimeSlot(rightEye.sort())}
                         </View>
                     </Row>
                 </ButtonImage>
