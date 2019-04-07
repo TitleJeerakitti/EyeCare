@@ -12,7 +12,7 @@ export default class GlaucomaInfoPDF extends React.Component {
         /> */}
         <Image
           style={{width: Dimensions.get('window').width, height: Dimensions.get('window').width*1.0141732}}
-          source = {require("../../assets/Glaucoma.jpg")}
+          source={require("../../assets/Glaucoma.jpg")}
         />
       </View>
     );

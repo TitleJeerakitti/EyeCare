@@ -3,12 +3,12 @@ import { Modal, View, Text, Alert, Dimensions, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Constants, } from 'expo';
 import { Center } from './Center';
-import { WHITE, DARK_GRAY, BLACK, RED, YELLOW } from '../../config';
+import { WHITE, DARK_GRAY, BLACK, RED, YELLOW, BLUE } from '../../config';
 import { Row } from './Row';
 import { ButtonSmallText } from './ButtonSmallText';
 import { Card } from './Card';
 
-const WIDTH = Dimensions.get('window').width * 0.6;
+const WIDTH = Dimensions.get('window').width * 0.8;
 
 class PopUpPicker extends React.Component {
     // constructor(props) {
@@ -25,7 +25,7 @@ class PopUpPicker extends React.Component {
     // }
 
     render() {
-        const { visible, onCancel, onConfirm, onDateChange, date } = this.props;
+        const { visible, onCancel, onConfirm, onDateChange, date, onDelete } = this.props;
         // console.log('popup ', this.state.time)
         return (
             <Modal
@@ -71,8 +71,16 @@ class PopUpPicker extends React.Component {
                         <Card>
                             <Row>
                                 <ButtonSmallText
-                                    onPress={onCancel}
+                                    onPress={onDelete}
                                     backgroundColor={RED}
+                                    color={WHITE}
+                                    style={{ marginRight: 10, }}
+                                >
+                                    Delete
+                                </ButtonSmallText>
+                                <ButtonSmallText
+                                    onPress={onCancel}
+                                    backgroundColor={BLUE}
                                     color={WHITE}
                                     style={{ marginRight: 10, }}
                                 >

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, } from 'react-native';
+import { View, Text, ListView, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { SQLite } from 'expo';
 import {
@@ -40,14 +40,13 @@ class DoctorEyeDropDetail extends React.Component {
         orderdb.transaction(tx => {
             tx.executeSql('select * from items where patientID = 1 and eyeDropID = ?', [this.props.data.id], (_, { rows: { _array } }) => {
                 if (_array.length > 0) {
-                    _array.forEach((eachOrder) => {
-                        this.setState({
-                            order: eachOrder,
-                            left: eachOrder.left,
-                            right: eachOrder.right,
-                            isAbnormal: eachOrder.type
-                        }, this.timeData(eachOrder));
+                    this.setState({
+                        order: _array[0],
+                        left: _array[0].left,
+                        right: _array[0].right,
+                        isAbnormal: _array[0].type
                     });
+                    this.timeData(_array[0]);
                 }
             });
         });
@@ -59,10 +58,23 @@ class DoctorEyeDropDetail extends React.Component {
                 this.setState({
                     time: _array
                 }); 
-                console.log(this.state.order);
-                console.log(this.state.time);
+                // console.log(this.state.order);
+                console.log('timeData', this.state.time);
+                this.deleteOrder();
             });
         });
+    }
+
+    deleteOrder() {
+        const { time, order } = this.state;
+        console.log(time.length);
+        if (time.length === 0 && order) {
+            orderdb.transaction(tx => {
+                tx.executeSql('delete from items where id = ?', [order.id], () =>
+                    this.setState({ order: null, })
+                );
+            });
+        }
     }
 
     updateOrder() {
@@ -76,7 +88,9 @@ class DoctorEyeDropDetail extends React.Component {
         }
     }
 
-    addTime(select) {
+    addTime() {
+        const { select } = this.state;
+        console.log('add', select);
         if (this.state.order === null) {
             orderdb.transaction(tx => {
                 tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date(), new Date(), this.state.left, this.state.right, this.state.isAbnormal],
@@ -96,7 +110,7 @@ class DoctorEyeDropDetail extends React.Component {
             });
             const duplicate = () => {
                 let dup = false;
-                this.state.time.forEach((item) => {             
+                this.state.time.forEach((item) => {  
                     if (this.state.date === item.time) {
                         dup = true;
                     }
@@ -117,18 +131,60 @@ class DoctorEyeDropDetail extends React.Component {
             }
             });
         }
+
+        this.setState({ visible: false, select: null });
         this.orderData();
     }
 
-    renderTimeList(times = []) {
-        return times.map((item, index) =>
+    removeTime(select) {
+        timedb.transaction(tx => {
+            tx.executeSql('delete from items where id = ?', [select.id]);
+        });
+        this.setState({ visible: false, select: null });
+        this.orderData();
+    }
+
+    removeAllTime() {
+        const { time } = this.state;
+        time.forEach(item => this.removeTime(item));
+    }
+
+    renderListView(data) {
+        const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+        return ds.cloneWithRows(data);
+    }
+
+    renderTimeList(item) {
+        return (
             <Button
-                key={index}
                 onPress={() => this.setState({ date: item.time, select: item, visible: true })}
                 backgroundColor={WHITE}
             >
                 {item.time}
             </Button>
+        );
+    }
+
+    renderFooter() {
+        return (
+            <View style={{ marginBottom: 10, }}>
+                <Card>
+                    <ButtonIconWithText
+                        title='เพิ่มเวลาหยอดตา'
+                        iconName='add'
+                        iconBg={RED}
+                        iconColor={WHITE}
+                        onPress={() => this.setState({ visible: true })}
+                    />
+                </Card>
+                <Button 
+                    onPress={() => this.removeAllTime()}
+                    backgroundColor={RED}
+                    color={WHITE}
+                >
+                    ลบการจ่ายยาตัวนี้
+                </Button>
+            </View>
         );
     }
 
@@ -139,10 +195,14 @@ class DoctorEyeDropDetail extends React.Component {
     }
 
     render() {
+        LayoutAnimation.spring();
+        if (Platform.OS === 'android') {
+            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
         const { data } = this.props;
         const { isAbnormal, left, right, date, visible } = this.state;
         return (
-            <View>
+            <View style={{ flex: 1, }}>
                 <CardImage title={data.name} source={{ uri: data.image }}>
                     <Card>
                         {this.renderDetailList(data.detail.split(','))}
@@ -192,22 +252,21 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                     </Row>
                 </Card>
-                {this.renderTimeList(this.state.time)}
-                <Card>
-                    <ButtonIconWithText
-                        title='เพิ่มเวลาหยอดตา'
-                        iconName='add'
-                        iconBg={RED}
-                        iconColor={WHITE}
-                        onPress={() => this.setState({ visible: true })}
-                    />
-                </Card>
+                {/* {this.renderTimeList(this.state.time)} */}
+                <ListView 
+                    dataSource={this.renderListView(this.state.time)}
+                    // style={{ flex: 1, }}
+                    enableEmptySections
+                    renderRow={(item) => this.renderTimeList(item)}
+                    renderFooter={() => this.renderFooter()}
+                />
                 <PopUpPicker
                     date={date}
                     visible={visible}
                     onDateChange={(time) => this.setState({ date: time })}
                     onCancel={() => this.setState({ visible: false, select: null })}
-                    onConfirm={() => { this.addTime(this.state.select); this.setState({ visible: false, select: null }); }}
+                    onConfirm={() => this.addTime()}
+                    onDelete={() => this.removeTime(this.state.select)}
                 />
             </View>
         );

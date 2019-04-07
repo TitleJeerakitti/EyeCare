@@ -28,6 +28,7 @@ class EyeCard extends React.Component {
     loadImage() {
         eyeDropdb.transaction(tx => {
             tx.executeSql('select * from items where id = ?', [this.state.data.order.eyeDropID], (_, { rows: { _array } }) => {
+                console.log(_array)
                 if (_array.length > 0) {
                     this.setState({ image: _array[0].image, name: _array[0].name, loading: false });
                 }

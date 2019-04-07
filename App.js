@@ -17,46 +17,82 @@ const appointmentdb = SQLite.openDatabase('appointment.db');
 const categoryName = ['PROSTAGLANDIN ANALOG', 'BETA BLOCKER', 'ALPHA AGONIST', 'CARBONIC ANHYDARS INHIBITOR (CAI)', 'CHOLINERGIC (MIOTIC)', 'FIXED COMBINE DRUG', 'Others'];
 const eyeDrop = [
   {
-    name: 'Latanoprost 0.005%_Xalatan_Pfizer Inc.',
+    name: 'Latanoprost 0.005%',
     category: 1,
     image: Asset.fromModule(require('./src/images/EyeDrops/01_PROSTAGLANDIN_ANALOG/1.1.1_Latanoprost_0.005__Xalatan_Pfizer_Inc..jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2,ศัพท์แพทย์ 3',
+    detail: 'Detail 1,Detail 2,Detail 3',
   },
   {
-    name: 'Timolol Maleate 0.5%_Timolol maleate_Alcon',
+    name: 'Bimatoptost 0.03%',
+    category: 1,
+    image: Asset.fromModule(require('./src/images/EyeDrops/01_PROSTAGLANDIN_ANALOG/1.2.1_Bimatoptost0.03__lumigan_AllerganInc.jpg')).uri,
+    detail: 'Detail 1,Detail 2,Detail 3',
+  },
+  {
+    name: 'Timolol Maleate 0.5%',
     category: 2,
-    image: Asset.fromModule(require('./src/images/EyeDrops/02_BETA_BLOCKER/2.1.1_Timolol_Maleate_0.5__Timolol_maleate_Alcon.jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
+    image: Asset.fromModule(require('./src/images/EyeDrops/02_BETA_BLOCKER/2.1.1_Timolol_Maleate_0.5__Timolol_maleate_Alcon..jpg')).uri,
+    detail: 'Detail 1,Detail 2',
   },
   {
-    name: 'Brimonidine tartrate 0.15%_Alphagan Purite_Allergan Inc.',
+    name: 'Betaxolol HCl 0.25%',
+    category: 2,
+    image: Asset.fromModule(require('./src/images/EyeDrops/02_BETA_BLOCKER/2.2.1_BetaxololHCl0.25__Betoptic-S_Alcon.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
+  },
+  {
+    name: 'Brimonidine tartrate 0.15%',
     category: 3,
     image: Asset.fromModule(require('./src/images/EyeDrops/03_ALPHA_AGONIST/3.1.1_Brimonidine_tartrate_0.15__Alphagan_Purite_Allergan_Inc..jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
+    detail: 'Detail 1,Detail 2',
   },
   {
-    name: 'Brinzolamide ophthalmic suspension 1%_Azopt_Alcon, Inc.',
+    name: 'Apraclonidine HCL 0.5%',
+    category: 3,
+    image: Asset.fromModule(require('./src/images/EyeDrops/03_ALPHA_AGONIST/3.2_ApraclonidineHCL0.5__Iopidine_Alcon.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
+  },
+  {
+    name: 'Brinzolamide ophthalmic suspension 1%',
     category: 4,
     image: Asset.fromModule(require('./src/images/EyeDrops/04_CARBONIC_ANHYDARS_INHIBITOR_(CAI)/4.1_Brinzolamide_ophthalmic_suspension_1__Azopt_Alcon,_Inc..jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
+    detail: 'Detail 1,Detail 2',
   },
   {
-    name: 'Pilocarpine HCl 1%_1% Isopto atropine_Alcon, Inc.',
+    name: 'Dorzolamide HCI 2%',
+    category: 4,
+    image: Asset.fromModule(require('./src/images/EyeDrops/04_CARBONIC_ANHYDARS_INHIBITOR_(CAI)/4.2_DorzolamideHCI2__Trusopt_Merck_CoInc.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
+  },
+  {
+    name: 'Pilocarpine HCl 1%',
     category: 5,
     image: Asset.fromModule(require('./src/images/EyeDrops/05_CHOLINERGIC_(MIOTIC)/5.1.1_Pilocarpine_HCl_1__1__Isopto_atropine_Alcon,_Inc..jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
+    detail: 'Detail 1,Detail 2',
   },
   {
-    name: 'Dorzolomide HCI _ Timolol Maleate_Cosopt_Merck _ Co. Inc.',
+    name: 'Pilocarpine HCl 2%',
+    category: 5,
+    image: Asset.fromModule(require('./src/images/EyeDrops/05_CHOLINERGIC_(MIOTIC)/5.1.2_PilocarpineHCl2__2_Isoptocarpine_AlconInc.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
+  },
+  {
+    name: 'Dorzolomide HCI',
     category: 6,
-    image: Asset.fromModule(require('./src/images/EyeDrops/06_FIXED_COMBINE_DRUG/6.1_Dorzolomide_HCI___Timolol_Maleate_Cosopt_Merck___Co._Inc2.jpg')).uri,
-    detail: 'ศัพท์แพทย์ 1,ศัพท์แพทย์ 2',
+    image: Asset.fromModule(require('./src/images/EyeDrops/06_FIXED_COMBINE_DRUG/6.1_Dorzolomide_HCI_Timolol_Maleate_Cosopt_Merck_Co._Inc2.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
   },
   {
-    name: 'Dipivefrine HCL 0.1%_Propine_Allergab',
+    name: 'BrimonidineTartrate',
+    category: 6,
+    image: Asset.fromModule(require('./src/images/EyeDrops/06_FIXED_COMBINE_DRUG/6.2_BrimonidineTartrate_TimololMaleate_Combigan_AllerganInc.jpg')).uri,
+    detail: 'Detail 1,Detail 2',
+  },
+  {
+    name: 'Dipivefrine HCL 0.1%',
     category: 7,
     image: Asset.fromModule(require('./src/images/EyeDrops/07_Others/7.1_Dipivefrine_HCL_0.1__Propine_Allergab.jpg')).uri,
-    detail: '',
+    detail: 'Detail 1,Detail 2',
   },
 ];
 
@@ -70,7 +106,7 @@ export default class App extends React.Component {
     });
 
     eyeDropdb.transaction(tx => {
-      //tx.executeSql('DROP TABLE IF EXISTS items');
+      // tx.executeSql('DROP TABLE IF EXISTS items');
       tx.executeSql(
         'create table if not exists items (id integer primary key not null, name text, category int ,image text, detail text)');
       this.addEyeDrop(tx);
