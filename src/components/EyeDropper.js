@@ -25,7 +25,7 @@ class EyeDropper extends React.Component {
 
     componentDidMount() {
         this.orderData();
-        this.obtainNotificationPermission();
+        // this.obtainNotificationPermission();
         this.listenForNotifications();
     }
 
@@ -63,16 +63,16 @@ class EyeDropper extends React.Component {
         );
     }
 
-    async obtainNotificationPermission() {
-        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
-        if (permission.status !== 'granted') {
-            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
-            if (permission.status !== 'granted') {
-                console.log('Permission not granted to show notification');
-            }
-        }
-        return permission;
-    }
+    // async obtainNotificationPermission() {
+    //     let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
+    //     if (permission.status !== 'granted') {
+    //         permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
+    //         if (permission.status !== 'granted') {
+    //             console.log('Permission not granted to show notification');
+    //         }
+    //     }
+    //     return permission;
+    // }
 
     listenForNotifications = () => {
         Notifications.addListener(notification => {

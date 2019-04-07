@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { SQLite } from 'expo';
+import { SQLite, Permissions, } from 'expo';
 import { NavigationEvents } from "react-navigation";
 import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
 import { BLUE, YELLOW, RED } from '../config';
@@ -31,6 +31,7 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.obtainNotificationPermission();
         this.patientData();
         this.appointmentData();
         this.orderData();
@@ -88,6 +89,17 @@ class HomeScreen extends React.Component {
         if (right === 1) {
             this.setState(this.state.rightEye.includes(time) ? null : { rightEye: this.state.rightEye.concat(time) });
         }
+    }
+
+    async obtainNotificationPermission() {
+        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
+            if (permission.status !== 'granted') {
+                console.log('Permission not granted to show notification');
+            }
+        }
+        return permission;
     }
 
     renderTimeSlot(data) {
