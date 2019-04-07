@@ -6,6 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import { Card, Center, Button, TextContent } from './common';
 import EyeCard from './special/EyeCard';
 import { NORMAL, YELLOW, BLUE, WHITE, RED, ABNORMAL, } from '../config';
+import { Constants, Notifications, Permissions } from 'expo';
 
 class StopWatch extends React.Component {
     constructor(props) {
@@ -61,6 +62,11 @@ class StopWatch extends React.Component {
         }
     }
 
+    stopNotification(){
+        Notifications.cancelAllScheduledNotificationsAsync();
+        console.log('stop noti done!');
+    }
+
     renderStopWatch() {
         const { 
             isNow, 
@@ -99,6 +105,7 @@ class StopWatch extends React.Component {
         }
         return (
             <View>
+                {this.stopNotification()}
                 {this.renderTimer()}
                 {/* <Card>
                     <Center>

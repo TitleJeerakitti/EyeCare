@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, } from 'react-native';
+import { ScrollView, Platform, Alert } from 'react-native';
 import { SQLite } from 'expo';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import {
 import EyeCard from './special/EyeCard';
 import { NORMAL, ABNORMAL } from '../config';
 import { selectEyeDrop } from '../actions';
+import { Constants, Notifications, Permissions } from 'expo';
 
 const orderdb = SQLite.openDatabase('order.db');
 const timedb = SQLite.openDatabase('time.db');
@@ -24,6 +25,8 @@ class EyeDropper extends React.Component {
 
     componentDidMount() {
         this.orderData();
+        this.obtainNotificationPermission();
+        this.listenForNotifications();
     }
 
     onClickEyeCard(item) {
@@ -60,6 +63,49 @@ class EyeDropper extends React.Component {
         );
     }
 
+    async obtainNotificationPermission() {
+        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
+        if (permission.status !== 'granted') {
+            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
+            if (permission.status !== 'granted') {
+                console.log('Permission not granted to show notification');
+            }
+        }
+        return permission;
+    }
+
+    listenForNotifications = () => {
+        Notifications.addListener(notification => {
+          if (notification.origin === 'received' && Platform.OS === 'ios') {
+            Alert.alert("Eye Care!", "Now, time to eye drop");
+          }
+        });
+      };
+
+    scheduleNotification(){
+        // await this.obtainNotificationPermission();
+        const localNotification = {
+            title: "Eye Care!",
+            body: "Now, time to eye drop",
+            ios: {
+                sound: true
+            },
+            android: {
+                sound: true,
+                vibrate: true
+            }
+        };
+    
+        const schedulingOptions = {
+            time: new Date().getTime() + 10000 //helppp
+        }
+    
+        Notifications.scheduleLocalNotificationAsync(
+            localNotification, schedulingOptions
+        );
+        console.log('Noti done!');
+    }
+
     render() {
         return (
             <ScrollView style={{ flex: 1 }}>
@@ -69,6 +115,7 @@ class EyeDropper extends React.Component {
                     </TextHeader>
                 </Card>
                 {this.renderEyeCard()}
+                {this.scheduleNotification()}
             </ScrollView>
         );
     }
