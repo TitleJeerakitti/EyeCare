@@ -98,7 +98,7 @@ class HomeScreen extends React.Component {
         timedb.transaction(tx => {
             tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
                 this.props.selectEyeDrop({ order, time: _array });
-                Actions.stopwatch();
+                Actions.stopwatch({ isNow: false });
             });
         });
     }

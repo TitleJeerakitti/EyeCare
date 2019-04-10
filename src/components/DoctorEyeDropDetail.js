@@ -19,7 +19,9 @@ const timedb = SQLite.openDatabase('time.db');
 class DoctorEyeDropDetail extends React.Component {
     constructor(props) {
         super(props);
-        const { type = 0, left = 1, right = 0 } = this.props.data;
+        const type = 0,
+            left = 1,
+            right = 0;
         this.state = {
             isAbnormal: type,
             left,

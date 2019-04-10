@@ -12,7 +12,7 @@ class StopWatch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isNow: true,
+            isNow: this.props.isNow,
             totalDuration: 5000,
             timerStart: false,
             timerReset: false,
@@ -89,7 +89,7 @@ class StopWatch extends React.Component {
                         เลื่อนเวลาหยอดตา
                     </Button>
                     <Button
-                        onPress={() => console.log('already dropped')}
+                        onPress={() => { console.log('already dropped'); Actions.home(); }}
                         backgroundColor={BLUE} 
                         color={WHITE}
                     >

@@ -27,7 +27,7 @@ class EyeDropper extends React.Component {
 
     onClickEyeCard(item) {
         this.props.selectEyeDrop(item);
-        Actions.stopwatch();
+        Actions.stopwatch({ isNow: true });
     }
 
     orderData() {
