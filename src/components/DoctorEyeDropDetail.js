@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ListView, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { SQLite } from 'expo';
+import { SQLite, Notifications, } from 'expo';
 import {
     CardImage,
     Card,
@@ -33,6 +33,9 @@ class DoctorEyeDropDetail extends React.Component {
     }
 
     componentDidMount() {
+        // if (Platform.OS === 'android') {
+        //     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        // }
         this.orderData();
     }
 
@@ -57,8 +60,8 @@ class DoctorEyeDropDetail extends React.Component {
             tx.executeSql('select * from items where orderID = ?', [eachOrder.id], (_, { rows: { _array } }) => {
                 this.setState({
                     time: _array
-                }); 
-                // console.log(this.state.order);
+                });
+                console.log(this.state.order);
                 console.log('timeData', this.state.time);
                 this.deleteOrder();
             });
@@ -67,7 +70,6 @@ class DoctorEyeDropDetail extends React.Component {
 
     deleteOrder() {
         const { time, order } = this.state;
-        console.log(time.length);
         if (time.length === 0 && order) {
             orderdb.transaction(tx => {
                 tx.executeSql('delete from items where id = ?', [order.id], () =>
@@ -78,65 +80,89 @@ class DoctorEyeDropDetail extends React.Component {
     }
 
     updateOrder() {
-        if (this.state.order !== null) {
+        const { left, right, isAbnormal, order } = this.state;
+        if (order !== null) {
             orderdb.transaction(tx => {
-                tx.executeSql('update items set doctorID = ? where id = ?', [1, this.state.order.id]);
-                tx.executeSql('update items set left = ? where id = ?', [this.state.left, this.state.order.id]);
-                tx.executeSql('update items set right = ? where id = ?', [this.state.right, this.state.order.id]);
-                tx.executeSql('update items set type = ? where id = ?', [this.state.isAbnormal, this.state.order.id]);
+                console.log('type', isAbnormal);
+                tx.executeSql('update items set doctorID = ? where id = ?', [1, order.id]);
+                tx.executeSql('update items set left = ? where id = ?', [left, order.id]);
+                tx.executeSql('update items set right = ? where id = ?', [right, order.id]);
+                tx.executeSql('update items set type = ? where id = ?', [isAbnormal, order.id]);
+            });
+            timedb.transaction(tx => {
+                tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
+                    _array.forEach((time) => {
+                        this.cancelScheduledNotification(time);
+                        (async () => {
+                            const notificationId = await this.scheduleNotification(order.id, time.time);
+                            timedb.transaction(rx => {
+                                rx.executeSql('update items set notificationID = ? where id = ?', [notificationId, time.id]);
+                            });
+                        })();
+                    });
+                });
             });
         }
     }
 
     addTime() {
-        const { select } = this.state;
-        console.log('add', select);
-        if (this.state.order === null) {
+        const { select, left, right, isAbnormal, date, order, time } = this.state;
+        console.log('edit', select);
+        if (order === null) {
             orderdb.transaction(tx => {
-                tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date(), new Date(), this.state.left, this.state.right, this.state.isAbnormal],
-                    (_, { insertId }) => {
+                tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date(), new Date(), left, right, isAbnormal],
+                    async (_, { insertId }) => {
+                        const notificationId = await this.scheduleNotification(insertId, date);
                         timedb.transaction(rx => {
-                            rx.executeSql('insert into items (orderID, time) values (?,?)', [insertId, this.state.date]);
+                            rx.executeSql('insert into items (orderID, time, notificationID) values (?,?,?)', [insertId, date, notificationId], () => this.orderData());
                         });
                     }
                 );
             });
         } else {
-            orderdb.transaction(tx => {
-                tx.executeSql('update items set doctorID = ? where id = ?', [1, this.state.order.id]);
-                tx.executeSql('update items set left = ? where id = ?', [this.state.left, this.state.order.id]);
-                tx.executeSql('update items set right = ? where id = ?', [this.state.right, this.state.order.id]);
-                tx.executeSql('update items set type = ? where id = ?', [this.state.isAbnormal, this.state.order.id]);
-            });
             const duplicate = () => {
                 let dup = false;
-                this.state.time.forEach((item) => {  
-                    if (this.state.date === item.time) {
+                time.forEach((item) => {
+                    if (date === item.time) {
                         dup = true;
                     }
                 });
                 return dup;
             };
-            timedb.transaction(tx => {
             if (select === null) {
                 if (!duplicate()) {
-                    tx.executeSql('insert into items (orderID, time) values (?,?)', [this.state.order.id, this.state.date]);
+                    (async () => {
+                        const notificationId = await this.scheduleNotification(order.id, date);
+                        timedb.transaction(tx => {
+                            tx.executeSql('insert into items (orderID, time, notificationID) values (?,?,?)', [order.id, date, notificationId], () => this.orderData());
+                        });
+                    })();
                 }
-            } else if (select.time !== this.state.date) {
+            } else if (select.time !== date) {
                 if (duplicate()) {
-                    tx.executeSql('delete from items where id = ?', [select.id]);
-            } else {
-                    tx.executeSql('update items set time = ? where id = ?', [this.state.date, select.id]);
+                    this.cancelScheduledNotification(select);
+                    timedb.transaction(tx => {
+                        tx.executeSql('delete from items where id = ?', [select.id], () => this.orderData());
+                    });
+                } else {
+                    this.cancelScheduledNotification(select);
+                    (async () => {
+                        const notificationId = await this.scheduleNotification(order.id, date);
+                        timedb.transaction(tx => {
+                            tx.executeSql('update items set time = ? where id = ?', [date, select.id],
+                                tx.executeSql('update items set notificationID = ? where id = ?', [notificationId, select.id],
+                                    () => this.orderData()));
+                        });
+                    })();
                 }
             }
-            });
         }
 
         this.setState({ visible: false, select: null });
-        this.orderData();
     }
 
     removeTime(select) {
+        this.cancelScheduledNotification(select);
         timedb.transaction(tx => {
             tx.executeSql('delete from items where id = ?', [select.id]);
         });
@@ -147,6 +173,53 @@ class DoctorEyeDropDetail extends React.Component {
     removeAllTime() {
         const { time } = this.state;
         time.forEach(item => this.removeTime(item));
+    }
+
+    scheduleNotification(orderID, time) {
+        const timeArray = time.split(':');
+        const { left, right, isAbnormal } = this.state;
+        let eyeSide = '';
+        let type = '';
+        if (left && right) {
+            eyeSide = 'หยอดตาทั้งสองข้าง';
+        } else if (left) {
+            eyeSide = 'หยอดตาซ้าย';
+        } else {
+            eyeSide = 'หยอดตาขวา';
+        }
+        if (isAbnormal) {
+            type = '(กดหัวตา)';
+        }
+        const date = new Date();
+        let scheduleTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(timeArray[0], 0), parseInt(timeArray[1], 0));
+        if (scheduleTime < date) {
+            scheduleTime.setDate(scheduleTime.getDate() + 1);
+        }
+        scheduleTime = scheduleTime.getTime();
+        const notificationId = Notifications.scheduleLocalNotificationAsync(
+            {
+                title: `${this.props.data.name}`,
+                body: `${eyeSide} ${type}`,
+                data: { orderID },
+                categoryId: 'eyedrop-alarm',
+                android: {
+                    channelId: 'eyedrop-alarm',
+                },
+                ios: {
+                    sound: true,
+                }
+            },
+            {
+                repeat: 'day',
+                time: scheduleTime,
+            },
+        );
+        return notificationId;
+    }
+
+    cancelScheduledNotification(select) {
+        Notifications.cancelScheduledNotificationAsync(select.notificationID);
+        Notifications.dismissNotificationAsync(select.notificationID);
     }
 
     renderListView(data) {
@@ -177,7 +250,7 @@ class DoctorEyeDropDetail extends React.Component {
                         onPress={() => this.setState({ visible: true })}
                     />
                 </Card>
-                <Button 
+                <Button
                     onPress={() => this.removeAllTime()}
                     backgroundColor={RED}
                     color={WHITE}
@@ -196,9 +269,6 @@ class DoctorEyeDropDetail extends React.Component {
 
     render() {
         LayoutAnimation.spring();
-        if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        }
         const { data } = this.props;
         const { isAbnormal, left, right, date, visible } = this.state;
         return (
@@ -212,10 +282,10 @@ class DoctorEyeDropDetail extends React.Component {
                     <Row>
                         <ButtonSmallText
                             onPress={() => {
-                                this.setState({ 
+                                this.setState({
                                     isAbnormal: isAbnormal === 0 ? 1 : 0
-                                });
-                                this.updateOrder();
+                                }, () => this.updateOrder());
+                                //this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={isAbnormal ? BLUE : WHITE}
@@ -227,8 +297,8 @@ class DoctorEyeDropDetail extends React.Component {
                             onPress={() => {
                                 this.setState({
                                     left: left === 0 ? 1 : 0
-                                });
-                                this.updateOrder();
+                                }, () => this.updateOrder());
+                                //this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={left ? BLUE : WHITE}
@@ -241,8 +311,8 @@ class DoctorEyeDropDetail extends React.Component {
                             onPress={() => {
                                 this.setState({
                                     right: right === 0 ? 1 : 0
-                                });
-                                this.updateOrder();
+                                }, () => this.updateOrder());
+                                //this.updateOrder();
                                 //console.log('save change');
                             }}
                             backgroundColor={right ? BLUE : WHITE}
@@ -253,7 +323,7 @@ class DoctorEyeDropDetail extends React.Component {
                     </Row>
                 </Card>
                 {/* {this.renderTimeList(this.state.time)} */}
-                <ListView 
+                <ListView
                     dataSource={this.renderListView(this.state.time)}
                     // style={{ flex: 1, }}
                     enableEmptySections

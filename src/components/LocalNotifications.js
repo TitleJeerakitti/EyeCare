@@ -1,62 +1,86 @@
-import React, { Component } from 'react';
-import { TextInput, View, Keyboard } from 'react-native';
-import { Constants, Notifications, Permissions } from 'expo';
+import React from "react";
+import { StyleSheet, Text, View, Button } from "react-native";
+import { Notifications, Permissions } from "expo";
 
-export default class Timer extends Component {
-    async obtainNotificationPermission() {
-        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
-        if (permission.status !== 'granted') {
-            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
-            if (permission.status !== 'granted') {
-                console.log('Permission not granted to show notification');
-            }
-        }
-        return permission;
-    }
-
-    listenForNotifications = () => {
-        Notifications.addListener(notification => {
-          if (notification.origin === 'received' && Platform.OS === 'ios') {
-            Alert.alert("Eye Care!", "Now, time to eye drop");
-          }
-        });
-      };
-
-    componentDidMount() {
-        this.obtainNotificationPermission();
-        this.listenForNotifications();
-    }
-
-    scheduleNotification(){
-        const localNotification = {
-            title: "Eye Care!",
-            body: "Now, time to eye drop",
-            ios: {
-                sound: true
-            },
-            android: {
-                sound: true,
-                vibrate: true
-            }
-        };
-    
-        const schedulingOptions = {
-            time: new Date().getTime() + 120000
-        }
-    
-        Notifications.scheduleLocalNotificationAsync(
-            localNotification, schedulingOptions
+export default class App extends React.Component {
+    askPermissions = async () => {
+        
+        const { status: existingStatus } = await Permissions.getAsync(
+            Permissions.NOTIFICATIONS
         );
-    }
+        let finalStatus = existingStatus;
+        if (existingStatus !== "granted") {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+        if (finalStatus !== "granted") {
+            return false;
+        }
+        return true;
+    };
+
+    sendNotificationImmediately = async () => {
+        let notificationId = await Notifications.presentLocalNotificationAsync({
+            title: "This is crazy",
+            body: "Your mind will blow after reading this",
+            categoryId: 'eyedrop-alarm',
+            android: {
+                channelId: 'eyedrop-alarm',
+            },
+        });
+        console.log(notificationId); // can be saved in AsyncStorage or send to server
+    };
+
+    scheduleNotification = async () => {
+        let notificationId = Notifications.scheduleLocalNotificationAsync(
+            {
+                title: "I'm Scheduled",
+                body: "Wow, I can show up even when app is closed",
+                android: {
+                    sound: true,
+                },
+            },
+            {
+                repeat: "minute",
+                time: new Date().getTime() + 10000
+            }
+        );
+        console.log(notificationId);
+    };
 
     render() {
         return (
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-                <TextInput
-                    onSubmitEditing={this.onSubmit}
-                    placeholder={'time in ms'}
+            <View style={styles.container}>
+                <Button
+                    title="Please accept Notifications Permissions"
+                    onPress={() => this.askPermissions()}
+                />
+                <Button
+                    title="Send Notification immediately"
+                    onPress={() => this.sendNotificationImmediately()}
+                />
+                <Button
+                    title="Dismiss All Notifications"
+                    onPress={() => Notifications.dismissAllNotificationsAsync()}
+                />
+                <Button
+                    title={"Schedule Notification"}
+                    onPress={() => this.scheduleNotification()}
+                />
+                <Button
+                    title="Cancel Scheduled Notifications"
+                    onPress={() => Notifications.cancelAllScheduledNotificationsAsync()}
                 />
             </View>
         );
     }
-};
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center"
+    }
+});

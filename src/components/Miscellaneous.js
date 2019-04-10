@@ -18,7 +18,7 @@ class Miscellaneous extends React.Component {
                     title='วิธีหยอดตา'
                 />
                 <ButtonImage
-                    onPress={() => console.log('test')}
+                    onPress={() => Actions.notification()}
                     source={require('../images/resize.png')}
                     title='ปรับขนาดตัวอักษร'
                 />

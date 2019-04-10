@@ -1,5 +1,5 @@
 import React from 'react';
-import { SQLite, Asset } from 'expo';
+import { SQLite, Asset, } from 'expo';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
@@ -125,7 +125,7 @@ export default class App extends React.Component {
 
     timedb.transaction(tx => {
       tx.executeSql(
-        'create table if not exists items (id integer primary key not null, orderID int, time text)');
+        'create table if not exists items (id integer primary key not null, orderID int, time text, notificationID int)');
     });
 
     appointmentdb.transaction(tx => {

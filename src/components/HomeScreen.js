@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, ScrollView, } from 'react-native';
+import { View, ScrollView, Platform } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { SQLite, Permissions, } from 'expo';
+import { SQLite, Permissions, Notifications,  } from 'expo';
 import { NavigationEvents } from "react-navigation";
+import { connect } from 'react-redux';
 import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
 import { BLUE, YELLOW, RED } from '../config';
+import { selectEyeDrop } from '../actions';
 
 
 const patientdb = SQLite.openDatabase('patient.db');
@@ -31,10 +33,74 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.obtainNotificationPermission();
+        this.askPermissions();
+
+        this._notificationSubscription = Notifications.addListener(
+            this._handleNotification
+        );
+
+        Notifications.createCategoryAsync('eyedrop-alarm', [
+            {
+                actionId: 'snooze',
+                buttonTitle: 'Snooze',
+                isDestructive: true,
+                isAuthenticationRequired: false,
+            },
+            // {
+            //   actionId: 'reply',
+            //   buttonTitle: 'Reply',
+            //   textInput: { submitButtonTitle: 'Reply', placeholder: 'Type Something' },
+            //   isAuthenticationRequired: false,
+            // },
+        ]);
+
+        if (Platform.OS === 'android') {
+            Notifications.createChannelAndroidAsync('eyedrop-alarm', {
+              name: 'Eye Drops Alarm',
+              sound: true,
+              priority: 'high',
+              vibrate: true,
+            });
+          }
+
         this.patientData();
         this.appointmentData();
         this.orderData();
+    }
+
+    askPermissions = async () => {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            return false;
+        }
+        return true;
+    };
+
+    _handleNotification = notification => {
+        if (notification.origin === 'selected') {
+            console.log('OrderID', notification);
+            orderdb.transaction(tx => {
+                tx.executeSql('select * from items where patientID = 1 and id = ?', [notification.data.orderID], (_, { rows: { _array } }) => {
+                    if (_array.length > 0) {
+                        this.notificationTimeData(_array[0]);
+                    }
+                });
+            });
+        }
+    };
+
+    notificationTimeData(order) {
+        timedb.transaction(tx => {
+            tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
+                this.props.selectEyeDrop({ order, time: _array });
+                Actions.stopwatch();
+            });
+        });
     }
 
     patientData() {
@@ -47,19 +113,19 @@ class HomeScreen extends React.Component {
                     });
                 }
             }, () => console.log('error'));
-        });    
+        });
     }
 
     appointmentData() {
         appointmentdb.transaction(tx => {
             tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
                 if (_array.length === 1) {
-                        this.setState({
-                            appointment: { date: _array[0].date, time: _array[0].time, place: 'โรงพยาบาลธรรมศาสตร์' }
-                        });
+                    this.setState({
+                        appointment: { date: _array[0].date, time: _array[0].time, place: 'โรงพยาบาลธรรมศาสตร์' }
+                    });
                 }
             }, () => console.log('error'));
-        });    
+        });
     }
 
     orderData() {
@@ -67,8 +133,8 @@ class HomeScreen extends React.Component {
             tx.executeSql('select * from items where patientID = 1', [], (_, { rows: { _array } }) => {
                 if (_array.length > 0) {
                     _array.forEach((eachOrder) => this.timeData(eachOrder));
-                    }
-                }, () => console.log('error'));
+                }
+            }, () => console.log('error'));
         });
     }
 
@@ -77,7 +143,7 @@ class HomeScreen extends React.Component {
             tx.executeSql('select * from items where orderID = ?', [eachOrder.id], (_, { rows: { _array } }) => {
                 if (_array.length > 0) {
                     _array.forEach((eachTime) => this.getTime(eachTime.time, eachOrder.left, eachOrder.right));
-                    }
+                }
             }, () => console.log('error'));
         });
     }
@@ -91,19 +157,8 @@ class HomeScreen extends React.Component {
         }
     }
 
-    async obtainNotificationPermission() {
-        let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
-        if (permission.status !== 'granted') {
-            permission = await Permissions.askAsync(Permissions.USER_FACING_NOTIFICATIONS)
-            if (permission.status !== 'granted') {
-                console.log('Permission not granted to show notification');
-            }
-        }
-        return permission;
-    }
-
     renderTimeSlot(data) {
-        return data.map((item, index) => 
+        return data.map((item, index) =>
             <TimeCard key={index}>{item}</TimeCard>
         );
     }
@@ -114,7 +169,9 @@ class HomeScreen extends React.Component {
             <ScrollView>
                 <NavigationEvents
                     onWillFocus={() => {
-                        this.componentDidMount();
+                        this.patientData();
+                        this.appointmentData();
+                        this.orderData();
                     }}
                     onDidBlur={() => {
                         this.setState({
@@ -130,7 +187,7 @@ class HomeScreen extends React.Component {
                     notHorizontal
                 >
                     <TextContent numberOfLines={1}>{this.state.patient.name}</TextContent>
-                    <TextContent style={{ }}>{this.state.patient.age} ปี</TextContent>
+                    <TextContent style={{}}>{this.state.patient.age} ปี</TextContent>
                 </ButtonImage>
                 <ButtonImage
                     onPress={() => Actions.eyedropper()}
@@ -171,4 +228,4 @@ class HomeScreen extends React.Component {
     }
 }
 
-export default HomeScreen;
+export default connect(null, { selectEyeDrop })(HomeScreen);

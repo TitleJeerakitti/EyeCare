@@ -18,7 +18,7 @@ import Magnifier from './Magnifier';
 import EyeDropsVideo from './EyeDropsVideo';
 import DoctorTakePhoto from './DoctorTakePhoto';
 import AddNewMed from './AddNewMed';
-import Timer from './LocalNotifications';
+import Notification from './LocalNotifications';
 import EyeCarePDF from './EyedropInfo';
 import GlaucomaInfoPDF from './GlaucomaInfo';
 
@@ -105,6 +105,12 @@ class RouterComponent extends React.Component {
                             key='eyedropsvideo' 
                             title='วิธีหยอดตา' 
                             component={EyeDropsVideo} 
+                            navBar={NavBar} 
+                        />
+                        <Scene 
+                            key='notification' 
+                            title='Notification' 
+                            component={Notification} 
                             navBar={NavBar} 
                         />
                     </Scene>

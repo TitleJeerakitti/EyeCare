@@ -62,11 +62,6 @@ class StopWatch extends React.Component {
         }
     }
 
-    stopNotification(){
-        Notifications.cancelAllScheduledNotificationsAsync();
-        console.log('stop noti done!');
-    }
-
     renderStopWatch() {
         const { 
             isNow, 
@@ -105,7 +100,6 @@ class StopWatch extends React.Component {
         }
         return (
             <View>
-                {this.stopNotification()}
                 {this.renderTimer()}
                 {/* <Card>
                     <Center>
