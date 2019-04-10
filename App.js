@@ -1,8 +1,9 @@
 import React from 'react';
-import { SQLite, Asset, } from 'expo';
+import { SQLite, Asset, Constants } from 'expo';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
+import { AsyncStorage } from 'react-native';
 import Router from './src/components/Router';
 import reducers from './src/reducers';
 
@@ -97,8 +98,38 @@ const eyeDrop = [
 ];
 
 export default class App extends React.Component {
-
   componentDidMount() {
+    this._retrieveData();
+  }
+
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem('Version', Constants.manifest.version);
+    } catch (error) {
+      // Error saving data
+    }
+  }
+
+  _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('Version');
+      if (value !== null) {
+        console.log(value);
+        if (value.localeCompare(Constants.manifest.version) === -1) {
+          this.initDatabase();
+          this._storeData();
+        }
+      } else {
+        this.initDatabase();
+        this._storeData();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  }
+
+  initDatabase() {
+    console.log('init');
     categorydb.transaction(tx => {
       tx.executeSql(
         'create table if not exists items (id integer primary key not null, name text)');
