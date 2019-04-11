@@ -56,7 +56,7 @@ class EditProfile extends React.Component {
               tx.executeSql('update items set disease = ? where id = ?;', [this.state.disease, 1]);
             }
           );
-        Actions.home();
+        Actions.pop();
     }
 
     render() {

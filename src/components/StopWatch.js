@@ -89,7 +89,7 @@ class StopWatch extends React.Component {
                         เลื่อนเวลาหยอดตา
                     </Button>
                     <Button
-                        onPress={() => { console.log('already dropped'); Actions.home(); }}
+                        onPress={() => { console.log('already dropped'); Actions.pop(); Actions.pop(); }}
                         backgroundColor={BLUE} 
                         color={WHITE}
                     >
@@ -128,7 +128,7 @@ class StopWatch extends React.Component {
                     {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
                 </Button> */}
                 <Button 
-                    onPress={() => { console.log('success'); Actions.home(); }}
+                    onPress={() => { console.log('success'); Actions.pop(); Actions.pop(); }}
                     backgroundColor={BLUE}
                     color={WHITE}
                 >
@@ -142,7 +142,7 @@ class StopWatch extends React.Component {
                     //     timerResetAbnormal: true, 
                     //     timerStartAbnormal: false 
                     // })}
-                    onPress={() => { console.log('cancel'); Actions.home(); }}
+                    onPress={() => { console.log('cancel'); Actions.pop(); }}
                     backgroundColor={RED}
                     color={WHITE}
                 >

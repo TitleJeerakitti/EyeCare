@@ -4,7 +4,11 @@ import { Notifications, Permissions } from "expo";
 
 export default class App extends React.Component {
     askPermissions = async () => {
-        
+
+        this._notificationSubscription = Notifications.addListener(
+            this._handleNotification
+        );
+
         const { status: existingStatus } = await Permissions.getAsync(
             Permissions.NOTIFICATIONS
         );
@@ -19,10 +23,17 @@ export default class App extends React.Component {
         return true;
     };
 
+    _handleNotification = notification => {
+        if (notification.origin === 'selected') {
+            console.log('OrderID', notification);
+        }
+    };
+
     sendNotificationImmediately = async () => {
         let notificationId = await Notifications.presentLocalNotificationAsync({
             title: "This is crazy",
             body: "Your mind will blow after reading this",
+            data: { orderID: 3 },
             categoryId: 'eyedrop-alarm',
             android: {
                 channelId: 'eyedrop-alarm',

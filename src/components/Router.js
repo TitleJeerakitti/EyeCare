@@ -79,12 +79,14 @@ class RouterComponent extends React.Component {
                             title='การหยอดตาด้วยตนเอง' 
                             component={EyeCarePDF}  
                             navBar={NavBar} 
+                            onBack
                         />
                         <Scene 
                             key='glaucomapdf' 
                             title='ข้อมูลโรคต้อหิน' 
                             component={GlaucomaInfoPDF}  
                             navBar={NavBar} 
+                            onBack
                         />
                     </Scene>
                     <Scene key='etc' icon={IconTab} iconName='comment-question'>
@@ -100,18 +102,21 @@ class RouterComponent extends React.Component {
                             title='แว่นขยาย' 
                             component={Magnifier} 
                             navBar={NavBar} 
+                            onBack
                         />
                         <Scene 
                             key='eyedropsvideo' 
                             title='วิธีหยอดตา' 
                             component={EyeDropsVideo} 
                             navBar={NavBar} 
+                            onBack
                         />
                         <Scene 
                             key='notification' 
                             title='Notification' 
                             component={Notification} 
                             navBar={NavBar} 
+                            onBack
                         />
                     </Scene>
                     <Scene key='doctor' icon={IconTab} iconName='clipboard-pulse'>

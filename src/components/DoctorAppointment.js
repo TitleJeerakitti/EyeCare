@@ -26,9 +26,10 @@ const datePickerStyles = {
 class DoctorAppointment extends React.Component {
     constructor(props) {
         super(props);
+        const date = new Date();
         this.state = {
-            time: new Date(),
-            date: new Date(),
+            time: `${date.getHours()}:${date.getMinutes()}`,
+            date: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
         };
     }
 
@@ -39,7 +40,8 @@ class DoctorAppointment extends React.Component {
                 tx.executeSql('update items set time = ? where id = ?', [this.state.time, 1]);
             }
         );
-        Actions.home();
+        Actions.pop();
+        //Actions.home();
     }
 
     render() {

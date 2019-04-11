@@ -114,7 +114,6 @@ export default class App extends React.Component {
     try {
       const value = await AsyncStorage.getItem('Version');
       if (value !== null) {
-        console.log(value);
         if (value.localeCompare(Constants.manifest.version) === -1) {
           this.initDatabase();
           this._storeData();
@@ -129,7 +128,6 @@ export default class App extends React.Component {
   }
 
   initDatabase() {
-    console.log('init');
     categorydb.transaction(tx => {
       tx.executeSql(
         'create table if not exists items (id integer primary key not null, name text)');

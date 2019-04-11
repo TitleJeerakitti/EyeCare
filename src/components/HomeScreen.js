@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Platform } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { SQLite, Permissions, Notifications,  } from 'expo';
+import { View, ScrollView, Platform, } from 'react-native';
+import { Actions, } from 'react-native-router-flux';
+import { SQLite, Permissions, Notifications, } from 'expo';
 import { NavigationEvents } from "react-navigation";
 import { connect } from 'react-redux';
 import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
@@ -32,7 +32,7 @@ class HomeScreen extends React.Component {
         };
     }
 
-    componentDidMount() {
+    initialize() {
         this.askPermissions();
 
         this._notificationSubscription = Notifications.addListener(
@@ -169,9 +169,7 @@ class HomeScreen extends React.Component {
             <ScrollView>
                 <NavigationEvents
                     onWillFocus={() => {
-                        this.patientData();
-                        this.appointmentData();
-                        this.orderData();
+                        this.initialize();
                     }}
                     onDidBlur={() => {
                         this.setState({
