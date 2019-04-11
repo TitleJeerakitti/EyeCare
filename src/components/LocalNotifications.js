@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import { Notifications, Permissions } from "expo";
 
 export default class App extends React.Component {
-    askPermissions = async () => {
 
+    askPermissions = async () => {
         this._notificationSubscription = Notifications.addListener(
             this._handleNotification
         );

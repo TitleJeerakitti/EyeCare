@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Platform, } from 'react-native';
+import { View, ScrollView, Platform, BackHandler } from 'react-native';
 import { Actions, } from 'react-native-router-flux';
 import { SQLite, Permissions, Notifications, } from 'expo';
 import { NavigationEvents } from "react-navigation";
@@ -33,6 +33,7 @@ class HomeScreen extends React.Component {
     }
 
     initialize() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);     
         this.askPermissions();
 
         this._notificationSubscription = Notifications.addListener(
@@ -80,6 +81,11 @@ class HomeScreen extends React.Component {
         }
         return true;
     };
+
+    handleBackPress() {
+        BackHandler.exitApp();
+        return true; //The event subscriptions are called in reverse order (i.e. last registered subscription first), and if one subscription returns true then subscriptions registered earlier will not be called.
+    }
 
     _handleNotification = notification => {
         if (notification.origin === 'selected') {
@@ -171,7 +177,8 @@ class HomeScreen extends React.Component {
                     onWillFocus={() => {
                         this.initialize();
                     }}
-                    onDidBlur={() => {
+                    onWillBlur={() => {
+                        BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
                         this.setState({
                             leftEye: [],
                             rightEye: []
