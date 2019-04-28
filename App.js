@@ -1,9 +1,9 @@
 import React from 'react';
-import { SQLite, Asset, Constants } from 'expo';
+import { SQLite, Asset, Constants, Permissions, Notifications } from 'expo';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import Router from './src/components/Router';
 import reducers from './src/reducers';
 
@@ -98,8 +98,19 @@ const eyeDrop = [
 ];
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true
+    };
+  }
+
   componentDidMount() {
-    this._retrieveData();
+    this._retrieveData().then(() => {
+      this.setState({
+        isLoading: false
+      });
+    });
   }
 
   _storeData = async () => {
@@ -121,11 +132,50 @@ export default class App extends React.Component {
       } else {
         this.initDatabase();
         this._storeData();
+
+        this.askPermissions();
+
+        // Notifications.createCategoryAsync('eyedrop-alarm', [
+        //   {
+        //     actionId: 'snooze',
+        //     buttonTitle: 'Snooze',
+        //     isDestructive: true,
+        //     isAuthenticationRequired: false,
+        //   },
+        //   // {
+        //   //   actionId: 'reply',
+        //   //   buttonTitle: 'Reply',
+        //   //   textInput: { submitButtonTitle: 'Reply', placeholder: 'Type Something' },
+        //   //   isAuthenticationRequired: false,
+        //   // },
+        // ]);
+
+        if (Platform.OS === 'android') {
+          Notifications.createChannelAndroidAsync('eyedrop-alarm', {
+            name: 'Eye Drops Alarm',
+            sound: true,
+            priority: 'high',
+            vibrate: true,
+          });
+        }
       }
     } catch (error) {
       // Error retrieving data
     }
   }
+
+  askPermissions = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      return false;
+    }
+    return true;
+  };
 
   initDatabase() {
     categorydb.transaction(tx => {
@@ -204,6 +254,9 @@ export default class App extends React.Component {
 
   render() {
     const store = createStore(reducers, applyMiddleware(ReduxThunk));
+    if (this.state.isLoading) {
+      return null;
+    }
     return (
       <Provider store={store}>
         <Router />

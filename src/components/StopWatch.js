@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux';
 import { Card, Center, Button, TextContent } from './common';
 import EyeCard from './special/EyeCard';
 import { NORMAL, YELLOW, BLUE, WHITE, RED, ABNORMAL, } from '../config';
-import { Constants, Notifications, Permissions } from 'expo';
+import { Notifications } from 'expo';
 
 class StopWatch extends React.Component {
     constructor(props) {
@@ -82,14 +82,14 @@ class StopWatch extends React.Component {
                         หยอดยาตอนนี้
                     </Button>
                     <Button
-                        onPress={() => console.log('change time')}
+                        onPress={() => { this.snoozeNotification(); Actions.pop(); }}
                         backgroundColor={BLUE} 
                         color={WHITE}
                     >
                         เลื่อนเวลาหยอดตา
                     </Button>
                     <Button
-                        onPress={() => { console.log('already dropped'); Actions.pop(); Actions.pop(); }}
+                        onPress={() => { console.log('already dropped'); Actions.popTo('home'); }}
                         backgroundColor={BLUE} 
                         color={WHITE}
                     >
@@ -128,7 +128,7 @@ class StopWatch extends React.Component {
                     {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
                 </Button> */}
                 <Button 
-                    onPress={() => { console.log('success'); Actions.pop(); Actions.pop(); }}
+                    onPress={() => { console.log('success'); Actions.popTo('home'); }}
                     backgroundColor={BLUE}
                     color={WHITE}
                 >
@@ -150,6 +150,42 @@ class StopWatch extends React.Component {
                 </Button>
             </View>
         );
+    }
+
+    snoozeNotification() {
+        const { id, left, right, type } = this.props.data.order;
+        let eyeSide = '';
+        let isAbnormal = '';
+        if (left && right) {
+            eyeSide = 'หยอดตาทั้งสองข้าง';
+        } else if (left) {
+            eyeSide = 'หยอดตาซ้าย';
+        } else {
+            eyeSide = 'หยอดตาขวา';
+        }
+        if (type) {
+            isAbnormal = '(กดหัวตา)';
+        }
+        const time = new Date();
+        const notificationId = Notifications.scheduleLocalNotificationAsync(
+            {
+                title: `${this.props.data.order.id}`,
+                body: `${eyeSide} ${isAbnormal}`,
+                data: { id },
+                //categoryId: 'eyedrop-alarm',
+                android: {
+                    channelId: 'eyedrop-alarm',
+                    color: '#FF7F50',
+                },
+                ios: {
+                    sound: true,
+                }
+            },
+            {
+                time: time.setMinutes(time.getMinutes() + 5),
+            },
+        );
+        return notificationId;
     }
 
     render() {

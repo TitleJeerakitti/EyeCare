@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, ScrollView, Platform, BackHandler } from 'react-native';
+import { View, ScrollView, BackHandler } from 'react-native';
 import { Actions, } from 'react-native-router-flux';
-import { SQLite, Permissions, Notifications, } from 'expo';
+import { SQLite } from 'expo';
 import { NavigationEvents } from "react-navigation";
 import { connect } from 'react-redux';
 import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
@@ -33,82 +33,18 @@ class HomeScreen extends React.Component {
     }
 
     initialize() {
-        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);     
-        this.askPermissions();
-
-        this._notificationSubscription = Notifications.addListener(
-            this._handleNotification
-        );
-
-        Notifications.createCategoryAsync('eyedrop-alarm', [
-            {
-                actionId: 'snooze',
-                buttonTitle: 'Snooze',
-                isDestructive: true,
-                isAuthenticationRequired: false,
-            },
-            // {
-            //   actionId: 'reply',
-            //   buttonTitle: 'Reply',
-            //   textInput: { submitButtonTitle: 'Reply', placeholder: 'Type Something' },
-            //   isAuthenticationRequired: false,
-            // },
-        ]);
-
-        if (Platform.OS === 'android') {
-            Notifications.createChannelAndroidAsync('eyedrop-alarm', {
-              name: 'Eye Drops Alarm',
-              sound: true,
-              priority: 'high',
-              vibrate: true,
-            });
-          }
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);   
 
         this.patientData();
         this.appointmentData();
         this.orderData();
     }
 
-    askPermissions = async () => {
-        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-            finalStatus = status;
-        }
-        if (finalStatus !== 'granted') {
-            return false;
-        }
-        return true;
-    };
-
     handleBackPress() {
         BackHandler.exitApp();
         return true; //The event subscriptions are called in reverse order (i.e. last registered subscription first), and if one subscription returns true then subscriptions registered earlier will not be called.
     }
-
-    _handleNotification = notification => {
-        if (notification.origin === 'selected') {
-            console.log('OrderID', notification);
-            orderdb.transaction(tx => {
-                tx.executeSql('select * from items where patientID = 1 and id = ?', [notification.data.orderID], (_, { rows: { _array } }) => {
-                    if (_array.length > 0) {
-                        this.notificationTimeData(_array[0]);
-                    }
-                });
-            });
-        }
-    };
-
-    notificationTimeData(order) {
-        timedb.transaction(tx => {
-            tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
-                this.props.selectEyeDrop({ order, time: _array });
-                Actions.stopwatch({ isNow: false });
-            });
-        });
-    }
-
+    
     patientData() {
         patientdb.transaction(tx => {
             tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {

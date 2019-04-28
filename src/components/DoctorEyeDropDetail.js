@@ -19,13 +19,10 @@ const timedb = SQLite.openDatabase('time.db');
 class DoctorEyeDropDetail extends React.Component {
     constructor(props) {
         super(props);
-        const type = 0,
-            left = 1,
-            right = 0;
         this.state = {
-            isAbnormal: type,
-            left,
-            right,
+            isAbnormal: 0,
+            left: 1,
+            right: 0,
             visible: false,
             date: '09:00',
             order: null,
@@ -95,12 +92,11 @@ class DoctorEyeDropDetail extends React.Component {
                 tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
                     _array.forEach((time) => {
                         this.cancelScheduledNotification(time);
-                        (async () => {
-                            const notificationId = await this.scheduleNotification(order.id, time.time);
+                        this.scheduleNotification(order.id, time.time).then((notificationId) => {
                             timedb.transaction(rx => {
                                 rx.executeSql('update items set notificationID = ? where id = ?', [notificationId, time.id]);
                             });
-                        })();
+                        });
                     });
                 });
             });
@@ -133,12 +129,11 @@ class DoctorEyeDropDetail extends React.Component {
             };
             if (select === null) {
                 if (!duplicate()) {
-                    (async () => {
-                        const notificationId = await this.scheduleNotification(order.id, date);
+                    this.scheduleNotification(order.id, date).then((notificationId) => {
                         timedb.transaction(tx => {
                             tx.executeSql('insert into items (orderID, time, notificationID) values (?,?,?)', [order.id, date, notificationId], () => this.orderData());
                         });
-                    })();
+                    });
                 }
             } else if (select.time !== date) {
                 if (duplicate()) {
@@ -148,14 +143,13 @@ class DoctorEyeDropDetail extends React.Component {
                     });
                 } else {
                     this.cancelScheduledNotification(select);
-                    (async () => {
-                        const notificationId = await this.scheduleNotification(order.id, date);
+                    this.scheduleNotification(order.id, date).then((notificationId) => {
                         timedb.transaction(tx => {
                             tx.executeSql('update items set time = ? where id = ?', [date, select.id],
                                 tx.executeSql('update items set notificationID = ? where id = ?', [notificationId, select.id],
                                     () => this.orderData()));
                         });
-                    })();
+                    });
                 }
             }
         }
@@ -193,19 +187,19 @@ class DoctorEyeDropDetail extends React.Component {
             type = '(กดหัวตา)';
         }
         const date = new Date();
-        let scheduleTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(timeArray[0], 0), parseInt(timeArray[1], 0));
+        const scheduleTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(timeArray[0], 0), parseInt(timeArray[1], 0));
         if (scheduleTime < date) {
             scheduleTime.setDate(scheduleTime.getDate() + 1);
         }
-        scheduleTime = scheduleTime.getTime();
         const notificationId = Notifications.scheduleLocalNotificationAsync(
             {
                 title: `${this.props.data.name}`,
                 body: `${eyeSide} ${type}`,
                 data: { orderID },
-                categoryId: 'eyedrop-alarm',
+                //categoryId: 'eyedrop-alarm',
                 android: {
                     channelId: 'eyedrop-alarm',
+                    color: '#FF7F50'
                 },
                 ios: {
                     sound: true,
@@ -213,7 +207,7 @@ class DoctorEyeDropDetail extends React.Component {
             },
             {
                 repeat: 'day',
-                time: scheduleTime,
+                time: scheduleTime.getTime(),
             },
         );
         return notificationId;

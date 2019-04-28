@@ -27,6 +27,9 @@
     },
     "android": {
       "package": "com.cekmitl.eyecare"
+    },
+    "notification": {
+      "icon": "./assets/small_icon.png"
     }
   }
 }

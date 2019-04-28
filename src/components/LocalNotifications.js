@@ -37,6 +37,38 @@ export default class App extends React.Component {
             categoryId: 'eyedrop-alarm',
             android: {
                 channelId: 'eyedrop-alarm',
+                icon: './images/eye-dropper.png',
+                color: '#FF7F50'
+            },
+        });
+        console.log(notificationId); // can be saved in AsyncStorage or send to server
+    };
+
+    sendNotificationImmediately2 = async () => {
+        let notificationId = await Notifications.presentLocalNotificationAsync({
+            title: "This is crazy",
+            body: "Your mind will blow after reading this",
+            data: { orderID: 3 },
+            categoryId: 'eyedrop-alarm',
+            android: {
+                channelId: 'eyedrop-alarm',
+                icon: '',
+                color: '#000000'
+            },
+        });
+        console.log(notificationId); // can be saved in AsyncStorage or send to server
+    };
+
+    sendNotificationImmediately3 = async () => {
+        let notificationId = await Notifications.presentLocalNotificationAsync({
+            title: "This is crazy",
+            body: "Your mind will blow after reading this",
+            data: { orderID: 3 },
+            categoryId: 'eyedrop-alarm',
+            android: {
+                channelId: 'eyedrop-alarm',
+                icon: 'eye-dropper.png',
+                color: '#FFFFFF'
             },
         });
         console.log(notificationId); // can be saved in AsyncStorage or send to server
@@ -69,6 +101,14 @@ export default class App extends React.Component {
                 <Button
                     title="Send Notification immediately"
                     onPress={() => this.sendNotificationImmediately()}
+                />
+                <Button
+                    title="Send Notification immediately2"
+                    onPress={() => this.sendNotificationImmediately2()}
+                />
+                <Button
+                    title="Send Notification immediately3"
+                    onPress={() => this.sendNotificationImmediately3()}
                 />
                 <Button
                     title="Dismiss All Notifications"

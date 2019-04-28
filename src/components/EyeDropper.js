@@ -46,8 +46,8 @@ class EyeDropper extends React.Component {
                 tx.executeSql('select * from items where orderID = ?', [eachOrder.id], (_, { rows: { _array } }) => {
                     this.setState({
                         data: this.state.data.concat({ order: eachOrder, time: _array })
-                    }, /*console.log(this.state.data)*/);
-                    console.log(this.state.data);
+                    }, console.log(this.state.data));
+                    //console.log(this.state.data);
                 });
             });
         });  
