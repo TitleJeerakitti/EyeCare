@@ -47,7 +47,7 @@ class RouterComponent extends React.Component {
                 orderdb.transaction(tx => {
                     tx.executeSql('select * from items where patientID = 1 and id = ?', [notification.data.orderID], (_, { rows: { _array } }) => {
                         if (_array.length > 0) {
-                            this.notificationTimeData(_array[0]);
+                            this.notificationTimeData(_array[0], notification.data.eyedropName);
                         }
                     });
                 });
@@ -55,11 +55,11 @@ class RouterComponent extends React.Component {
         }
     };
 
-    notificationTimeData(order) {
+    notificationTimeData(order, eyedropName) {
         timedb.transaction(tx => {
             tx.executeSql('select * from items where orderID = ?', [order.id], (_, { rows: { _array } }) => {
                 this.props.selectEyeDrop({ order, time: _array });
-                Actions.stopwatch({ isNow: false });
+                Actions.stopwatch({ isNow: false, eyedropName });
             });
         });
     }

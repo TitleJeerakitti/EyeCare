@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, } from 'react-native';
-import { connect } from 'react-redux'; 
+import { connect } from 'react-redux';
 import { Timer } from 'react-native-stopwatch-timer';
 import { Actions } from 'react-native-router-flux';
 import { Card, Center, Button, TextContent } from './common';
@@ -24,9 +24,9 @@ class StopWatch extends React.Component {
     }
 
     renderTimer() {
-        if (this.props.data.order.type) {  
-            const { 
-                timerStartAbnormal, 
+        if (this.props.data.order.type) {
+            const {
+                timerStartAbnormal,
                 timerResetAbnormal,
             } = this.state;
             return (
@@ -34,63 +34,63 @@ class StopWatch extends React.Component {
                     <Card>
                         <Center>
                             <TextContent>กดหัวตา</TextContent>
-                            <Timer 
-                                totalDuration={this.state.totalDurationAbnormal} 
-                                start={this.state.timerStartAbnormal} 
-                                reset={this.state.timerResetAbnormal} 
-                                handleFinish={() => this.setState({ 
-                                    isSecond: true, 
-                                    timerStartAbnormal: false 
+                            <Timer
+                                totalDuration={this.state.totalDurationAbnormal}
+                                start={this.state.timerStartAbnormal}
+                                reset={this.state.timerResetAbnormal}
+                                handleFinish={() => this.setState({
+                                    isSecond: true,
+                                    timerStartAbnormal: false
                                 })}
-                            />   
-                        </Center>  
+                            />
+                        </Center>
                     </Card>
-                    <Button 
-                        onPress={() => this.setState(timerResetAbnormal ? { 
-                            timerStartAbnormal: !timerStartAbnormal, 
+                    <Button
+                        onPress={() => this.setState(timerResetAbnormal ? {
+                            timerStartAbnormal: !timerStartAbnormal,
                             timerResetAbnormal: true,
                         } : {
-                            timerStartAbnormal: !timerStartAbnormal, 
-                            timerResetAbnormal: false 
-                        })}
+                                timerStartAbnormal: !timerStartAbnormal,
+                                timerResetAbnormal: false
+                            })}
                         backgroundColor={YELLOW}
-                    >   
+                    >
                         {timerStartAbnormal ? 'จับเวลาใหม่' : 'เริ่มจับเวลา'}
-                    </Button> 
+                    </Button>
                 </View>
             );
         }
     }
 
     renderStopWatch() {
-        const { 
-            isNow, 
-            timerStart, 
-            timerReset, 
-            totalDuration, 
-            isSecond, 
-            timerStartAbnormal, 
+        const {
+            isNow,
+            timerStart,
+            timerReset,
+            totalDuration,
+            isSecond,
+            timerStartAbnormal,
         } = this.state;
         if (!isNow) {
             return (
                 <View>
-                    <Button 
+                    <Button
                         onPress={() => this.setState({ isNow: true })}
-                        backgroundColor={BLUE} 
+                        backgroundColor={BLUE}
                         color={WHITE}
                     >
                         หยอดยาตอนนี้
                     </Button>
                     <Button
                         onPress={() => { this.snoozeNotification(); Actions.pop(); }}
-                        backgroundColor={BLUE} 
+                        backgroundColor={BLUE}
                         color={WHITE}
                     >
                         เลื่อนเวลาหยอดตา
                     </Button>
                     <Button
                         onPress={() => { console.log('already dropped'); Actions.popTo('home'); }}
-                        backgroundColor={BLUE} 
+                        backgroundColor={BLUE}
                         color={WHITE}
                     >
                         หยอดตาแล้ว
@@ -127,14 +127,14 @@ class StopWatch extends React.Component {
                 >
                     {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
                 </Button> */}
-                <Button 
+                <Button
                     onPress={() => { console.log('success'); Actions.popTo('home'); }}
                     backgroundColor={BLUE}
                     color={WHITE}
                 >
                     หยอดตาสำเร็จ
                 </Button>
-                <Button 
+                <Button
                     // onPress={() => this.setState(isSecond ? { 
                     //     timerReset: true, 
                     //     timerStart: false 
@@ -169,9 +169,12 @@ class StopWatch extends React.Component {
         const time = new Date();
         const notificationId = Notifications.scheduleLocalNotificationAsync(
             {
-                title: `${this.props.data.order.id}`,
+                title: `${this.props.eyedropName}`,
                 body: `${eyeSide} ${isAbnormal}`,
-                data: { id },
+                data: {
+                    orderID: id,
+                    eyedropName: this.props.eyedropName
+                },
                 //categoryId: 'eyedrop-alarm',
                 android: {
                     channelId: 'eyedrop-alarm',

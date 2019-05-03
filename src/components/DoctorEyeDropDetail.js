@@ -195,7 +195,10 @@ class DoctorEyeDropDetail extends React.Component {
             {
                 title: `${this.props.data.name}`,
                 body: `${eyeSide} ${type}`,
-                data: { orderID },
+                data: {
+                    orderID,
+                    eyedropName: this.props.data.name
+                },
                 //categoryId: 'eyedrop-alarm',
                 android: {
                     channelId: 'eyedrop-alarm',
@@ -291,11 +294,13 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                         <ButtonSmallText
                             onPress={() => {
-                                this.setState({
-                                    left: left === 0 ? 1 : 0
-                                }, () => this.updateOrder());
-                                //this.updateOrder();
-                                //console.log('save change');
+                                if (right === 1) {
+                                    this.setState({
+                                        left: left === 0 ? 1 : 0
+                                    }, () => this.updateOrder());
+                                    //this.updateOrder();
+                                    //console.log('save change');
+                                }
                             }}
                             backgroundColor={left ? BLUE : WHITE}
                             color={left ? WHITE : BLACK}
@@ -305,11 +310,13 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                         <ButtonSmallText
                             onPress={() => {
-                                this.setState({
-                                    right: right === 0 ? 1 : 0
-                                }, () => this.updateOrder());
-                                //this.updateOrder();
-                                //console.log('save change');
+                                if (left === 1) {
+                                    this.setState({
+                                        right: right === 0 ? 1 : 0
+                                    }, () => this.updateOrder());
+                                    //this.updateOrder();
+                                    //console.log('save change');
+                                }
                             }}
                             backgroundColor={right ? BLUE : WHITE}
                             color={right ? WHITE : BLACK}
