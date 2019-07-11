@@ -14,7 +14,6 @@ const patientdb = SQLite.openDatabase('patient.db');
 const orderdb = SQLite.openDatabase('order.db');
 const timedb = SQLite.openDatabase('time.db');
 const appointmentdb = SQLite.openDatabase('appointment.db');
-const historydb = SQLite.openDatabase('history.db');
 
 const categoryName = ['PROSTAGLANDIN ANALOG', 'BETA BLOCKER', 'ALPHA AGONIST', 'CARBONIC ANHYDARS INHIBITOR (CAI)', 'CHOLINERGIC (MIOTIC)', 'FIXED COMBINE DRUG', 'Others'];
 const eyeDrop = [
@@ -213,12 +212,6 @@ export default class App extends React.Component {
         'create table if not exists items (id integer primary key not null, date text, time text)');
       this.addAppointment(tx);
     });
-
-    historydb.transaction(tx => {
-      // tx.executeSql('DROP TABLE IF EXISTS items');
-      tx.executeSql(
-        'create table if not exists items (id integer primary key not null,patientID int, eyeDropID int, date text)');
-      });
   }
 
   addPatient(tx) {
