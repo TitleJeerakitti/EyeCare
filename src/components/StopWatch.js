@@ -6,7 +6,10 @@ import { Actions } from 'react-native-router-flux';
 import { Card, Center, Button, TextContent } from './common';
 import EyeCard from './special/EyeCard';
 import { NORMAL, YELLOW, BLUE, WHITE, RED, ABNORMAL, } from '../config';
+import { SQLite } from 'expo';
 import { Notifications } from 'expo';
+
+const historydb = SQLite.openDatabase('history.db');
 
 class StopWatch extends React.Component {
     constructor(props) {
@@ -60,6 +63,18 @@ class StopWatch extends React.Component {
                 </View>
             );
         }
+    }
+
+    saveHistory(){
+        const date = new Date();
+        historydb.transaction(
+            tx =>{
+                tx.executeSql('insert into items (patientID, eyeDropID, date) values (?,?,?,?)', [this.props.data.order.patientID ,this.props.data.order.eyeDropID, date]);
+                tx.executeSql('select * from items', [], (_, { rows }) =>
+                console.log(JSON.stringify(rows))
+              );
+            }
+        );
     }
 
     renderStopWatch() {
@@ -127,8 +142,12 @@ class StopWatch extends React.Component {
                 >
                     {isSecond ? 'จับเวลาต่อ' : 'เริ่มจับเวลา'}
                 </Button> */}
-                <Button
-                    onPress={() => { console.log('success'); Actions.popTo('home'); }}
+                <Button 
+                    onPress={() => { 
+                        this.saveHistory();
+                        console.log('success'); 
+                        Actions.home(); 
+                    }}
                     backgroundColor={BLUE}
                     color={WHITE}
                 >
