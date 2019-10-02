@@ -294,13 +294,13 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                         <ButtonSmallText
                             onPress={() => {
-                                if (right === 1) {
+                                // if (right === 1) {
                                     this.setState({
                                         left: left === 0 ? 1 : 0
                                     }, () => this.updateOrder());
                                     //this.updateOrder();
                                     //console.log('save change');
-                                }
+                                // }
                             }}
                             backgroundColor={left ? BLUE : WHITE}
                             color={left ? WHITE : BLACK}
@@ -310,13 +310,13 @@ class DoctorEyeDropDetail extends React.Component {
                         </ButtonSmallText>
                         <ButtonSmallText
                             onPress={() => {
-                                if (left === 1) {
+                                // if (left === 1) {
                                     this.setState({
                                         right: right === 0 ? 1 : 0
                                     }, () => this.updateOrder());
                                     //this.updateOrder();
                                     //console.log('save change');
-                                }
+                                // }
                             }}
                             backgroundColor={right ? BLUE : WHITE}
                             color={right ? WHITE : BLACK}

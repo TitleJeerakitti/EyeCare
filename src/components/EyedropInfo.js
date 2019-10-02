@@ -212,8 +212,7 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE,
     display: "flex",
     textAlign: "left",
-    paddingLeft: "7%",
-    paddingRight: "5%"
+    padding: "5%"
   },
   containerImage: {
     display: "flex",
@@ -221,7 +220,7 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   image: {
-    margin: "3% 3%"
+    margin: '3%',
   }
 });
 

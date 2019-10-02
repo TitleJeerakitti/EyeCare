@@ -21,7 +21,7 @@ import Magnifier from "./Magnifier";
 import EyeDropsVideo from "./EyeDropsVideo";
 import DoctorTakePhoto from "./DoctorTakePhoto";
 import AddNewMed from "./AddNewMed";
-import Notification from "./LocalNotifications";
+// import Notification from "./LocalNotifications";
 import GlaucomaInfoPDF from "./GlaucomaInfo";
 import { knowledge, takeCare, effect, question } from "./EyedropInfo";
 import * as news from "./infoData"
@@ -185,13 +185,13 @@ class RouterComponent extends React.Component {
               navBar={NavBar}
               onBack
             />
-            <Scene
+            {/* <Scene
               key="notification"
               title="Notification"
               component={Notification}
               navBar={NavBar}
               onBack
-            />
+            /> */}
           </Scene>
           <Scene key="doctor" icon={IconTab} iconName="clipboard-pulse">
             <Scene
