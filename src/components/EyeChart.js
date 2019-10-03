@@ -12,12 +12,68 @@ class EyeChart extends React.Component {
     this.state = {
       data: [],
       eyeDrop: [],
-      dataSet: []
+      dataSet: [],
+      eiei: true
     };
   }
+  //id integer primary key not null, patientID int, eyeDropID int, date text, time text
+  makeData() {
+    if (this.state.eiei) {
+      this.setState({
+        data: [
+          {
+            id: 1,
+            patientID: 1,
+            eyeDropID: 1,
+            date: "2019-10-3",
+            time: "9.01"
+          },
+          {
+            id: 2,
+            patientID: 1,
+            eyeDropID: 1,
+            date: "2019-10-3",
+            time: "12.30"
+          },
+          {
+            id: 3,
+            patientID: 1,
+            eyeDropID: 1,
+            date: "2019-10-3",
+            time: "18.10"
+          },
+          {
+            id: 4,
+            patientID: 1,
+            eyeDropID: 2,
+            date: "2019-10-3",
+            time: "9.10"
+          },
+          {
+            id: 5,
+            patientID: 1,
+            eyeDropID: 2,
+            date: "2019-10-3",
+            time: "13.22"
+          },
+          {
+            id: 6,
+            patientID: 1,
+            eyeDropID: 3,
+            date: "2019-10-4",
+            time: "11.00"
+          }
+        ],
+        eyeDrop: [1, 2, 3]
+      });
+      this.setState.eiei = false;
+    }
+  }
 
-  componentDidMount() {
-    this.historyData();
+  componentWillReceiveProps() {
+    // this.historyData();
+    // this.makeData();
+    // this.createDataSet();
   }
 
   historyData() {
@@ -47,12 +103,16 @@ class EyeChart extends React.Component {
     );
   }
 
-  test() {
+  createDataSet() {
     const { data, eyeDrop, dataSet } = this.state;
-    let result = [];
+    let result = [],
+      result2 = [],
+      result3 = [];
     if (eyeDrop && data) {
       eyeDrop.forEach(eachEyeDrop => {
         result = [];
+        result2 = [];
+        result3 = [];
         data.forEach(eachEle => {
           if (eachEyeDrop == eachEle.eyeDropID) {
             result.push({
@@ -61,11 +121,70 @@ class EyeChart extends React.Component {
             });
           }
         });
-        if (result) {
+
+        result.forEach((eachResult, i) => {
+          if (i + 1 < result.length) {
+            if (result[i].x == result[i + 1].x) {
+              result2.push({
+                x: result[i + 1].x,
+                y: result[i + 1].y
+              });
+              result.splice(i + 1, 1);
+            }
+          }
+        });
+
+        result.forEach((eachResult, i) => {
+          if (i + 1 < result.length) {
+            if (result[i].x == result[i + 1].x) {
+              result3.push({
+                x: result[i + 1].x,
+                y: result[i + 1].y
+              });
+              result.splice(i + 1, 1);
+            }
+          }
+        });
+
+        if (result.length > 0 && result2.length > 0 && result3.length > 0) {
           dataSet[parseInt(eachEyeDrop)] = [
             {
               data: result,
-              color: ORANGE
+              color: "#90EE90"
+            },
+            {
+              data: result2,
+              color: "#FFA07A"
+            },
+            {
+              data: result3,
+              color: "#87CEFA"
+            }
+          ];
+        } else if (
+          result.length > 0 &&
+          result2.length > 0 &&
+          result3.length == 0
+        ) {
+          dataSet[parseInt(eachEyeDrop)] = [
+            {
+              data: result,
+              color: "#90EE90"
+            },
+            {
+              data: result2,
+              color: "#FFA07A"
+            }
+          ];
+        } else if (
+          result.length > 0 &&
+          result2.length == 0 &&
+          result3.length == 0
+        ) {
+          dataSet[parseInt(eachEyeDrop)] = [
+            {
+              data: result,
+              color: "#90EE90"
             }
           ];
         }
@@ -75,9 +194,12 @@ class EyeChart extends React.Component {
 
   render() {
     const { data, eyeDrop, dataSet } = this.state;
+    if (eyeDrop[eyeDrop.length - 1] != dataSet.length - 1) {
+      this.createDataSet();
+    }
+
     console.log("dataSet", dataSet);
     console.log("--------------------------------------------");
-    this.test();
     return (
       <ScrollView>
         <Text>eiei</Text>
