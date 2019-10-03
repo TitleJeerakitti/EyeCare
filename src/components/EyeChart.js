@@ -12,13 +12,12 @@ class EyeChart extends React.Component {
     this.state = {
       data: [],
       eyeDrop: [],
-      dataChart: []
+      dataSet: []
     };
   }
 
   componentDidMount() {
     this.historyData();
-    this.test();
   }
 
   historyData() {
@@ -75,8 +74,10 @@ class EyeChart extends React.Component {
   }
 
   render() {
+    const { data, eyeDrop, dataSet } = this.state;
     console.log("dataSet", dataSet);
     console.log("--------------------------------------------");
+    this.test();
     return (
       <ScrollView>
         <Text>eiei</Text>
