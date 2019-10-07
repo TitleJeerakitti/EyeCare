@@ -1,7 +1,8 @@
 import React from "react";
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SQLite } from "expo";
-import { ORANGE } from "../config";
+import PureChart from "react-native-pure-chart";
+import TextHeader from "../components/common/TextHeader";
 
 const historydb = SQLite.openDatabase("history.db");
 const eyeDropdb = SQLite.openDatabase("eyedrop.db");
@@ -12,67 +13,67 @@ class EyeChart extends React.Component {
     this.state = {
       data: [],
       eyeDrop: [],
+      eyeDropdb: [],
       dataSet: [],
-      eiei: true
+      eiei: true,
+      name: []
     };
   }
   //id integer primary key not null, patientID int, eyeDropID int, date text, time text
   makeData() {
-    if (this.state.eiei) {
-      this.setState({
-        data: [
-          {
-            id: 1,
-            patientID: 1,
-            eyeDropID: 1,
-            date: "2019-10-3",
-            time: "9.01"
-          },
-          {
-            id: 2,
-            patientID: 1,
-            eyeDropID: 1,
-            date: "2019-10-3",
-            time: "12.30"
-          },
-          {
-            id: 3,
-            patientID: 1,
-            eyeDropID: 1,
-            date: "2019-10-3",
-            time: "18.10"
-          },
-          {
-            id: 4,
-            patientID: 1,
-            eyeDropID: 2,
-            date: "2019-10-3",
-            time: "9.10"
-          },
-          {
-            id: 5,
-            patientID: 1,
-            eyeDropID: 2,
-            date: "2019-10-3",
-            time: "13.22"
-          },
-          {
-            id: 6,
-            patientID: 1,
-            eyeDropID: 3,
-            date: "2019-10-4",
-            time: "11.00"
-          }
-        ],
-        eyeDrop: [1, 2, 3]
-      });
-      this.setState.eiei = false;
-    }
+    this.setState({
+      data: [
+        {
+          id: 1,
+          patientID: 1,
+          eyeDropID: 1,
+          date: "2019-10-3",
+          time: "9.01"
+        },
+        {
+          id: 2,
+          patientID: 1,
+          eyeDropID: 1,
+          date: "2019-10-3",
+          time: "12.30"
+        },
+        {
+          id: 3,
+          patientID: 1,
+          eyeDropID: 1,
+          date: "2019-10-3",
+          time: "18.10"
+        },
+        {
+          id: 4,
+          patientID: 1,
+          eyeDropID: 2,
+          date: "2019-10-3",
+          time: "9.10"
+        },
+        {
+          id: 5,
+          patientID: 1,
+          eyeDropID: 2,
+          date: "2019-10-3",
+          time: "13.22"
+        },
+        {
+          id: 6,
+          patientID: 1,
+          eyeDropID: 3,
+          date: "2019-10-4",
+          time: "11.00"
+        }
+      ],
+      eyeDrop: [1, 2, 3]
+    });
   }
 
-  componentWillReceiveProps() {
+  componentDidMount() {
     // this.historyData();
-    // this.makeData();
+    this.makeData();
+    this.queryName();
     // this.createDataSet();
   }
 
@@ -92,6 +93,19 @@ class EyeChart extends React.Component {
           }
         }
       );
+    });
+    this.queryName();
+  }
+
+  queryName() {
+    eyeDropdb.transaction(tx => {
+      tx.executeSql("select * from items ", [], (_, { rows: { _array } }) => {
+        if (_array.length > 0) {
+          this.setState({
+            eyeDropdb: _array
+          });
+        }
+      });
     });
   }
 
@@ -192,17 +206,32 @@ class EyeChart extends React.Component {
     }
   }
 
-  render() {
-    const { data, eyeDrop, dataSet } = this.state;
-    if (eyeDrop[eyeDrop.length - 1] != dataSet.length - 1) {
-      this.createDataSet();
-    }
+  genChart() {
+    const { data, eyeDrop, dataSet, eyeDropdb, name } = this.state;
+    eyeDropdb.forEach(eachEle => {
+      eyeDrop.forEach(eachId => {
+        if (eachEle.id == parseInt(eachId)) {
+          name.push(eachEle.name);
+        }
+      });
+    });
 
-    console.log("dataSet", dataSet);
-    console.log("--------------------------------------------");
+    return eyeDrop.map((item, index) => (
+      <View>
+        {console.log(item)}
+        <Text>{name[index]}</Text>
+        <PureChart data={dataSet[parseInt(item)]} type="line" />
+      </View>
+    ));
+  }
+
+  render() {
+    const { data, eyeDrop, dataSet, name, eyeDropdb } = this.state;
+    this.createDataSet();
+
     return (
       <ScrollView>
-        <Text>eiei</Text>
+        {this.genChart()}
       </ScrollView>
     );
   }
