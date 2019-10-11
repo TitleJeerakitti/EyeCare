@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { 

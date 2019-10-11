@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, } from 'react-native';
 import { connect } from 'react-redux';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import { Actions } from 'react-native-router-flux';
 import { Card, ButtonIconWithText } from './common';
 import { RED, ABNORMAL, NORMAL, WHITE } from '../config';

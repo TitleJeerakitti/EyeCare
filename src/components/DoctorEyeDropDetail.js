@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, ListView, LayoutAnimation, UIManager, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import { SQLite, Notifications, } from 'expo';
+import { Notifications, } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import {
     CardImage,
     Card,
@@ -108,7 +109,7 @@ class DoctorEyeDropDetail extends React.Component {
         console.log('edit', select);
         if (order === null) {
             orderdb.transaction(tx => {
-                tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date(), new Date(), left, right, isAbnormal],
+                tx.executeSql('insert into items (patientID, doctorID, eyeDropID, start, end, left, right, type) values (?,?,?,?,?,?,?,?)', [1, 1, this.props.data.id, new Date().toString(), new Date().toString(), left, right, isAbnormal],
                     async (_, { insertId }) => {
                         const notificationId = await this.scheduleNotification(insertId, date);
                         timedb.transaction(rx => {

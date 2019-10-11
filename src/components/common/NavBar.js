@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, } from 'react-native';
-import { Constants, LinearGradient, } from 'expo';
+import { LinearGradient } from 'expo-linear-gradient'
+import Constants from 'expo-constants';
 import { Icon, } from 'react-native-elements';
 import { Actions, } from 'react-native-router-flux';
 import { WHITE } from '../../config';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Video, ScreenOrientation } from 'expo';
+import { ScreenOrientation } from 'expo';
+import { Video } from 'expo-av';
 import { NavigationEvents } from "react-navigation";
 
 class VideoPlayer extends React.Component {

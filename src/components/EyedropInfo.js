@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, ScrollView, Image, Dimensions, View } from "react-native";
-import { Constants, Asset } from "expo";
+import Constants from 'expo-constants';
+import { Asset } from 'expo-asset'
 import { TextHeader, TextContent, Button } from "./common";
 import * as info from "./infoData";
 import { FONT_SIZE, FONT_HEADER, ORANGE, WHITE } from "../config";
@@ -197,22 +198,23 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: WHITE,
     borderRadius: 10,
-    margin: 10
+    margin: 10,
   },
   contentHead: {
     fontSize: FONT_HEADER,
     color: ORANGE,
-    fontWeight: "bold",
-    display: "flex",
-    textAlign: "left",
-    paddingLeft: "5%",
-    paddingRight: "5%"
+    fontFamily: 'open-sans-bold'
+    // fontWeight: "bold",
+    // display: "flex",
+    // textAlign: "left",
+    // paddingLeft: "5%",
+    // paddingRight: "5%"
   },
   contentInfo: {
-    fontSize: FONT_SIZE,
-    display: "flex",
-    textAlign: "left",
-    padding: "5%"
+    // fontSize: FONT_SIZE,
+    // display: "flex",
+    // textAlign: "left",
+    padding: 10,
   },
   containerImage: {
     display: "flex",

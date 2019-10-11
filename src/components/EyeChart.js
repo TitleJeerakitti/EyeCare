@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
-import { SQLite } from "expo";
+import { SQLite } from 'expo-sqlite';
 import PureChart from "react-native-pure-chart";
 import TextHeader from "../components/common/TextHeader";
 

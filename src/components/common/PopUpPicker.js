@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, Alert, Dimensions, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import { Constants, } from 'expo';
+import Constants from 'expo-constants';
 import { Center } from './Center';
 import { WHITE, DARK_GRAY, BLACK, RED, YELLOW, BLUE } from '../../config';
 import { Row } from './Row';

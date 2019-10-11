@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Image, Dimensions } from 'react-native';
 import PDFReader from 'rn-pdf-reader-js';
-import { Constants, Asset } from 'expo';
+import Constants from 'expo-constants';
+import { Asset } from 'expo-asset'
 
 export default class GlaucomaInfoPDF extends React.Component {
   render() {

@@ -1,6 +1,7 @@
 import React from "react";
 import { Router, Scene, Tabs, Actions } from "react-native-router-flux";
-import { SQLite, Notifications } from "expo";
+import { Notifications } from "expo";
+import { SQLite } from 'expo-sqlite';
 import { connect } from "react-redux";
 import { NavBar, IconTab } from "./common";
 import { selectEyeDrop } from "../actions";

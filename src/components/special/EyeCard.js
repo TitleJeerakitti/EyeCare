@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Dimensions, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import { selectEyeDrop } from '../../actions';
 import { ButtonImage, Row, Center, TextContent, TimeCard } from '../common';
 import EyeImage from '../../images/eye-open.png';

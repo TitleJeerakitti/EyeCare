@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, TextInput, StyleSheet } from 'react-native';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { YELLOW } from '../config';

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Actions } from 'react-native-router-flux';
-import { SQLite } from 'expo';
+import { SQLite } from 'expo-sqlite';
 import { DARK_GRAY, BLACK, YELLOW, RED, WHITE } from '../config';
 import { Card, CardSection, Center, Button } from './common';
 

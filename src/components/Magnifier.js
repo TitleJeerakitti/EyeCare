@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import * as Permissions from 'expo-permissions';
+import { Camera } from 'expo-camera';
 
 export default class CameraExample extends React.Component {
   constructor(props) {
