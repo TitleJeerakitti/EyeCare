@@ -17,11 +17,11 @@ class Miscellaneous extends React.Component {
                     source={require('../images/video-player.png')}
                     title='วิธีหยอดตา'
                 />
-                <ButtonImage
+                {/* <ButtonImage
                     onPress={() => Actions.notification()}
                     source={require('../images/resize.png')}
                     title='ปรับขนาดตัวอักษร'
-                />
+                /> */}
             </View>
         );
     }

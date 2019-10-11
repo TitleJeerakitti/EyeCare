@@ -9,9 +9,9 @@ class DoctorHome extends React.Component {
         super(props);
         this.state = {
             username: 'doctor',
-            password: '1234',
-            inputUsername: 'doctor',
-            inputPassword: '1234',
+            password: 'tec-kmitl',
+            inputUsername: '',
+            inputPassword: '',
             isLogin: false,
             error: '',
         };

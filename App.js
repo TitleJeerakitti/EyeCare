@@ -215,10 +215,9 @@ export default class App extends React.Component {
     });
 
     historydb.transaction(tx => {
-      // tx.executeSql('DROP TABLE IF EXISTS items');
       tx.executeSql(
-        'create table if not exists items (id integer primary key not null,patientID int, eyeDropID int, date text)');
-      });
+        'create table if not exists items (id integer primary key not null, patientID int, eyeDropID int, date text, time text)');      
+    });
   }
 
   addPatient(tx) {
