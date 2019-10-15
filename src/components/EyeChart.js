@@ -15,66 +15,12 @@ class EyeChart extends React.Component {
       eyeDrop: [],
       eyeDropdb: [],
       dataSet: [],
-      eiei: true,
       name: []
     };
   }
-  //id integer primary key not null, patientID int, eyeDropID int, date text, time text
-  makeData() {
-    this.setState({
-      data: [
-        {
-          id: 1,
-          patientID: 1,
-          eyeDropID: 1,
-          date: "2019-10-3",
-          time: "9.01"
-        },
-        {
-          id: 2,
-          patientID: 1,
-          eyeDropID: 1,
-          date: "2019-10-3",
-          time: "12.30"
-        },
-        {
-          id: 3,
-          patientID: 1,
-          eyeDropID: 1,
-          date: "2019-10-3",
-          time: "18.10"
-        },
-        {
-          id: 4,
-          patientID: 1,
-          eyeDropID: 2,
-          date: "2019-10-3",
-          time: "9.10"
-        },
-        {
-          id: 5,
-          patientID: 1,
-          eyeDropID: 2,
-          date: "2019-10-3",
-          time: "13.22"
-        },
-        {
-          id: 6,
-          patientID: 1,
-          eyeDropID: 3,
-          date: "2019-10-4",
-          time: "11.00"
-        }
-      ],
-      eyeDrop: [1, 2, 3]
-    });
-  }
 
   componentDidMount() {
-    // this.historyData();
-    this.makeData();
-    this.queryName();
-    // this.createDataSet();
+    this.historyData();
   }
 
   historyData() {
@@ -94,6 +40,7 @@ class EyeChart extends React.Component {
         }
       );
     });
+    this.state.eyeDrop.reverse()
     this.queryName();
   }
 
@@ -107,6 +54,7 @@ class EyeChart extends React.Component {
         }
       });
     });
+    this.state.eyeDrop.reverse()
   }
 
   getEyeDrops(ID) {
@@ -216,9 +164,8 @@ class EyeChart extends React.Component {
       });
     });
 
-    return eyeDrop.map((item, index) => (
+    return eyeDrop.map((item, index, key) => (
       <View>
-        {console.log(item)}
         <Text>{name[index]}</Text>
         <PureChart data={dataSet[parseInt(item)]} type="line" />
       </View>
@@ -226,9 +173,7 @@ class EyeChart extends React.Component {
   }
 
   render() {
-    const { data, eyeDrop, dataSet, name, eyeDropdb } = this.state;
     this.createDataSet();
-
     return (
       <ScrollView>
         {this.genChart()}
