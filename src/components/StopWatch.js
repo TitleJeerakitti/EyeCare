@@ -70,7 +70,9 @@ class StopWatch extends React.Component {
   }
 
   saveHistory() {
-    const date = new Date();
+    const today = new Date();
+    const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    const time = today.getHours() + "." + today.getMinutes();
     historydb.transaction(tx => {
       tx.executeSql(
         "insert into items (patientID, eyeDropID, date, time) values (?,?,?,?)",
@@ -78,7 +80,7 @@ class StopWatch extends React.Component {
           this.props.data.order.patientID,
           this.props.data.order.eyeDropID,
           date,
-          date.getTime()
+          time
         ]
       );
       tx.executeSql("select * from items", [], (_, { rows }) =>
