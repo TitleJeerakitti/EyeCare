@@ -236,7 +236,7 @@ class StopWatch extends React.Component {
     const { data } = this.props;
     return (
       <View>
-        <EyeCard item={data} disabled />
+        <EyeCard item={data} disabled detail />
         {this.renderStopWatch()}
       </View>
     );
