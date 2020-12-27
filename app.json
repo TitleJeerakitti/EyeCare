@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.cekmitl.eyecare",
-      "versionCode": 1
+      "versionCode": 370010000
     },
     "notification": {
       "icon": "./assets/small_icon.png"

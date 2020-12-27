@@ -93,9 +93,8 @@ class EditProfile extends React.Component {
     } = this.state
     return (
       <KeyboardAvoidingView
-        style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
+        style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={150}
       >
         <ScrollView style={{ flex: 1 }}>
           <Card style={{ marginTop: 10 + IMAGE_SIZE / 2 }}>

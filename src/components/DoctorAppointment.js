@@ -3,6 +3,7 @@ import { View, } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import { Actions } from 'react-native-router-flux';
 import * as SQLite from 'expo-sqlite';
+import moment from 'moment'
 import { DARK_GRAY, BLACK, YELLOW, RED, WHITE } from '../config';
 import { Card, CardSection, Center, Button } from './common';
 
@@ -28,8 +29,8 @@ class DoctorAppointment extends React.Component {
         super(props);
         const date = new Date();
         this.state = {
-            time: `${date.getHours()}:${date.getMinutes()}`,
-            date: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
+            time: moment().format('hh:mm'),
+            date: moment().format('DD-MM-YYYY'),
         };
     }
 

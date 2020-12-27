@@ -70,9 +70,8 @@ class DoctorHome extends React.Component {
       <KeyboardAvoidingView
         style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={150}
       >
-        <Card>
+        <Card style={{ flex: 1, justifyContent: 'space-around' }}>
           <CardSection>
             <Input
               placeholder="Username"
