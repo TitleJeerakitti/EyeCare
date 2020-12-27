@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,11 +24,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.cekmitl.eyecare",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.1"
     },
     "android": {
       "package": "com.cekmitl.eyecare",
-      "versionCode": 370010000
+      "versionCode": 370010001
     },
     "notification": {
       "icon": "./assets/small_icon.png"
