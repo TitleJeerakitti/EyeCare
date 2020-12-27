@@ -7,7 +7,7 @@ import { Card, Center, Button, TextContent } from "./common";
 import EyeCard from "./special/EyeCard";
 import { NORMAL, YELLOW, BLUE, WHITE, RED, ABNORMAL } from "../config";
 import { Notifications } from "expo";
-import { SQLite } from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 
 const historydb = SQLite.openDatabase("history.db");
 

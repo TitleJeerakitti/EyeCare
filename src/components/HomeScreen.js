@@ -1,119 +1,120 @@
-import React from 'react';
-import { View, ScrollView, BackHandler } from 'react-native';
-import { Actions, } from 'react-native-router-flux';
-import { SQLite } from 'expo-sqlite';
-import { NavigationEvents } from "react-navigation";
-import { connect } from 'react-redux';
-import { TextContent, Row, Button, CardImage, ButtonImage, TimeCard } from './common';
-import { BLUE, YELLOW, RED } from '../config';
-import { selectEyeDrop } from '../actions';
+import React from 'react'
+import { View, ScrollView, BackHandler } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import * as SQLite from 'expo-sqlite'
+import { NavigationEvents } from 'react-navigation'
+import { connect } from 'react-redux'
+import {
+  TextContent,
+  Row,
+  Button,
+  CardImage,
+  ButtonImage,
+  TimeCard,
+} from './common'
+import { BLUE, YELLOW, RED } from '../config'
+import { selectEyeDrop } from '../actions'
 
-
-const patientdb = SQLite.openDatabase('patient.db');
-const appointmentdb = SQLite.openDatabase('appointment.db');
-const orderdb = SQLite.openDatabase('order.db');
-const timedb = SQLite.openDatabase('time.db');
+const patientdb = SQLite.openDatabase('patient.db')
+const appointmentdb = SQLite.openDatabase('appointment.db')
+const orderdb = SQLite.openDatabase('order.db')
+const timedb = SQLite.openDatabase('time.db')
 
 class HomeScreen extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       patient: {
-        name: "",
-        age: ""
+        name: '',
+        age: '',
       },
       leftEye: [],
       rightEye: [],
       appointment: {
-        date: "",
-        time: "",
-        place: ""
-      }
-    };
+        date: '',
+        time: '',
+        place: '',
+      },
+    }
   }
 
-  componentDidMount() {
-    this.patientData();
-    this.appointmentData();
-    this.orderData();
+  async componentDidMount() {
+    await this.patientData()
+    await this.appointmentData()
+    await this.orderData()
   }
 
-  initialize() {
-    BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
+  async initialize() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress)
 
-    this.patientData();
-    this.appointmentData();
-    this.orderData();
+    await this.patientData()
+    await this.appointmentData()
+    await this.orderData()
   }
 
   handleBackPress() {
-    BackHandler.exitApp();
-    return true; //The event subscriptions are called in reverse order (i.e. last registered subscription first), and if one subscription returns true then subscriptions registered earlier will not be called.
+    BackHandler.exitApp()
+    return true //The event subscriptions are called in reverse order (i.e. last registered subscription first), and if one subscription returns true then subscriptions registered earlier will not be called.
   }
 
-  patientData() {
-    patientdb.transaction(tx => {
-      tx.executeSql(
-        "select * from items",
+  async patientData() {
+    await patientdb.transaction(async (tx) => {
+      await tx.executeSql(
+        'select * from items',
         [],
         (_, { rows: { _array, length } }) => {
           if (length === 1) {
-            const { name, surname, birthday } = _array[0];
+            const { name, surname, birthday } = _array[0]
             const age =
               new Date().getFullYear() -
-              birthday.substring(birthday.length - 4, birthday.length);
+              birthday.substring(birthday.length - 4, birthday.length)
             this.setState({
               patient: {
-                name: name || surname ? `${name} ${surname}` : "ชื่อ นามสกุล",
-                age: birthday ? age : "-"
-              }
-            });
-          }
-        }
-      );
-    });
-  }
-
-  appointmentData() {
-    appointmentdb.transaction(tx => {
-      tx.executeSql(
-        "select * from items",
-        [],
-        (_, { rows: { _array } }) => {
-          if (_array.length === 1) {
-            this.setState({
-              appointment: {
-                date: _array[0].date,
-                time: _array[0].time,
-                place: "โรงพยาบาลธรรมศาสตร์"
-              }
-            });
+                name: name || surname ? `${name} ${surname}` : 'ชื่อ นามสกุล',
+                age: birthday ? age : '-',
+              },
+            })
           }
         },
-        () => console.log("error")
-      );
-    });
+      )
+    })
+  }
+
+  async appointmentData() {
+    await appointmentdb.transaction(async (tx) => {
+      await tx.executeSql('select * from items', [], (_, { rows: { _array } }) => {
+        if (_array.length === 1) {
+          this.setState({
+            appointment: {
+              date: _array[0].date,
+              time: _array[0].time,
+              place: 'โรงพยาบาลธรรมศาสตร์',
+            },
+          })
+        }
+      })
+    })
   }
 
   myExecuteSql = async (db, sql, params = []) => {
     return new Promise((resolve, reject) =>
-      db.transaction(tx => {
-        tx.executeSql(
+      db.transaction(async (tx) => {
+        await tx.executeSql(
           sql,
           params,
           (_, { rows }) => resolve(rows._array),
-          reject
-        );
-      })
-    );
-  };
+          reject,
+        )
+      }),
+    )
+  }
 
-  orderData() {
-    const leftTemp = [];
-    const rightTemp = [];
-    orderdb.transaction(tx => {
-      tx.executeSql(
-        "select * from items where patientID = 1",
+  async orderData() {
+    const leftTemp = []
+    const rightTemp = []
+    await orderdb.transaction(async (tx) => {
+      await tx.executeSql(
+        'select * from items where patientID = 1',
         [],
         (_, { rows: { _array } }) => {
           if (_array.length > 0) {
@@ -122,73 +123,70 @@ class HomeScreen extends React.Component {
                 leftTemp.push(
                   this.myExecuteSql(
                     timedb,
-                    "select * from items where orderID = ?",
-                    [id]
-                  )
-                );
+                    'select * from items where orderID = ?',
+                    [id],
+                  ),
+                )
               }
               if (right) {
                 rightTemp.push(
                   this.myExecuteSql(
                     timedb,
-                    "select * from items where orderID = ?",
-                    [id]
-                  )
-                );
+                    'select * from items where orderID = ?',
+                    [id],
+                  ),
+                )
               }
-            });
+            })
           }
-          Promise.all(leftTemp).then(leftOrders => {
-            leftTemp.length = 0;
-            leftOrders.forEach(order => {
+          Promise.all(leftTemp).then((leftOrders) => {
+            leftTemp.length = 0
+            leftOrders.forEach((order) => {
               order.forEach(({ time }) => {
-                  if (!leftTemp.includes(time)) {
-                  leftTemp.push(time);
+                if (!leftTemp.includes(time)) {
+                  leftTemp.push(time)
                 }
-              });
-            });
-            Promise.all(rightTemp).then(rightOrders => {
-              rightTemp.length = 0;
-              rightOrders.forEach(order => {
+              })
+            })
+            Promise.all(rightTemp).then((rightOrders) => {
+              rightTemp.length = 0
+              rightOrders.forEach((order) => {
                 order.forEach(({ time }) => {
-                    if (!rightTemp.includes(time)) {
-                        rightTemp.push(time);
+                  if (!rightTemp.includes(time)) {
+                    rightTemp.push(time)
                   }
-                });
-              });
-              this.setState({ leftEye: leftTemp, rightEye: rightTemp });
-            });
-          });
+                })
+              })
+              this.setState({ leftEye: leftTemp, rightEye: rightTemp })
+            })
+          })
         },
-        () => console.log("error")
-      );
-    });
+      )
+    })
   }
 
   renderTimeSlot(data) {
-    return data.map((item, index) => <TimeCard key={index}>{item}</TimeCard>);
+    return data.map((item, index) => <TimeCard key={index}>{item}</TimeCard>)
   }
 
   render() {
-    const { leftEye, rightEye } = this.state;
+    const { leftEye, rightEye } = this.state
     return (
       <ScrollView>
         <NavigationEvents
           onDidFocus={() => {
-            console.log('focus')
-            this.initialize();
+            this.initialize()
           }}
           onWillBlur={() => {
-            console.log('blur')
             BackHandler.removeEventListener(
-              "hardwareBackPress",
-              this.handleBackPress
-            );
+              'hardwareBackPress',
+              this.handleBackPress,
+            )
           }}
         />
         <ButtonImage
           onPress={() => Actions.edit_profile()}
-          source={require("../images/user.png")}
+          source={require('../images/user.png')}
           title="ข้อมูลผู้ป่วย"
           notHorizontal
         >
@@ -197,27 +195,27 @@ class HomeScreen extends React.Component {
         </ButtonImage>
         <ButtonImage
           onPress={() => Actions.eyedropper()}
-          source={require("../images/eye-dropper.png")}
+          source={require('../images/eye-dropper.png')}
           title="เวลาหยอดตา"
           notHorizontal
         >
           <Row>
-            <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <TextContent>ตาซ้าย</TextContent>
               {this.renderTimeSlot(leftEye.sort())}
             </View>
-            <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <TextContent>ตาขวา</TextContent>
               {this.renderTimeSlot(rightEye.sort())}
             </View>
           </Row>
         </ButtonImage>
         <CardImage
-          source={require("../images/calendar.png")}
+          source={require('../images/calendar.png')}
           title="นัดพบแพทย์"
         >
           <View style={{ flex: 1 }}>
-            <TextContent style={{ color: BLUE, fontWeight: "bold" }}>
+            <TextContent style={{ color: BLUE, fontWeight: 'bold' }}>
               {this.state.appointment.date} ({this.state.appointment.time})
             </TextContent>
             <TextContent>{this.state.appointment.place}</TextContent>
@@ -234,8 +232,8 @@ class HomeScreen extends React.Component {
           สถิติการหยอดตา
         </Button>
       </ScrollView>
-    );
+    )
   }
 }
 
-export default connect(null, { selectEyeDrop })(HomeScreen);
+export default connect(null, { selectEyeDrop })(HomeScreen)

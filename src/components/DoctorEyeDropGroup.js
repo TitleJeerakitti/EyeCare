@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { SQLite } from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { Card, CardSection, Button } from './common';

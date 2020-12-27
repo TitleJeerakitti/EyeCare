@@ -1,79 +1,78 @@
-import React from "react";
-import { Router, Scene, Tabs, Actions } from "react-native-router-flux";
-import { Notifications } from "expo";
-import { SQLite } from 'expo-sqlite';
-import { connect } from "react-redux";
-import { NavBar, IconTab } from "./common";
-import { selectEyeDrop } from "../actions";
-import HomeScreen from "./HomeScreen";
-import NewsHome from "./NewsHome";
-import Miscellaneous from "./Miscellaneous";
-import DoctorHome from "./DoctorHome";
-import EditProfile from "./EditProfile";
-import EyeDropper from "./EyeDropper";
-import StopWatch from "./StopWatch";
-import EyeChart from "./EyeChart";
-import DoctorEyeDrop from "./DoctorEyeDrop";
-import DoctorEyeDropDetail from "./DoctorEyeDropDetail";
-import DoctorPickEyeDrop from "./DoctorPickEyeDrop";
-import DoctorAppointment from "./DoctorAppointment";
-import DoctorEyeDropGroup from "./DoctorEyeDropGroup";
-import Magnifier from "./Magnifier";
-import EyeDropsVideo from "./EyeDropsVideo";
-import DoctorTakePhoto from "./DoctorTakePhoto";
-import AddNewMed from "./AddNewMed";
+import React from 'react'
+import { Router, Scene, Tabs, Actions } from 'react-native-router-flux'
+import { Notifications } from 'expo'
+import * as SQLite from 'expo-sqlite'
+import { connect } from 'react-redux'
+import { NavBar, IconTab } from './common'
+import { selectEyeDrop } from '../actions'
+import HomeScreen from './HomeScreen'
+import NewsHome from './NewsHome'
+import Miscellaneous from './Miscellaneous'
+import DoctorHome from './DoctorHome'
+import EditProfile from './EditProfile'
+import EyeDropper from './EyeDropper'
+import StopWatch from './StopWatch'
+import EyeChart from './EyeChart'
+import DoctorEyeDrop from './DoctorEyeDrop'
+import DoctorEyeDropDetail from './DoctorEyeDropDetail'
+import DoctorPickEyeDrop from './DoctorPickEyeDrop'
+import DoctorAppointment from './DoctorAppointment'
+import DoctorEyeDropGroup from './DoctorEyeDropGroup'
+import Magnifier from './Magnifier'
+import EyeDropsVideo from './EyeDropsVideo'
+import DoctorTakePhoto from './DoctorTakePhoto'
+import AddNewMed from './AddNewMed'
 // import Notification from "./LocalNotifications";
-import GlaucomaInfoPDF from "./GlaucomaInfo";
-import { knowledge, takeCare, effect, question } from "./EyedropInfo";
-import * as news from "./infoData"
+import GlaucomaInfoPDF from './GlaucomaInfo'
+import { knowledge, takeCare, effect, question } from './EyedropInfo'
+import * as news from './infoData'
 
-const orderdb = SQLite.openDatabase("order.db");
-const timedb = SQLite.openDatabase("time.db");
+const orderdb = SQLite.openDatabase('order.db')
+const timedb = SQLite.openDatabase('time.db')
 
 class RouterComponent extends React.Component {
   componentDidMount() {
     this._notificationSubscription = Notifications.addListener(
-      this._handleNotification
-    );
+      this._handleNotification,
+    )
   }
 
-  _handleNotification = notification => {
-    if (notification.origin === "selected") {
-      console.log("OrderID", notification);
+  _handleNotification = (notification) => {
+    if (notification.origin === 'selected') {
       // if (notification.actionId === 'snooze') {
       //     console.log('Snooze');
       //     Actions.main();
       //     console.log(Actions.currentScene);
       // } else {
-      orderdb.transaction(tx => {
+      orderdb.transaction((tx) => {
         tx.executeSql(
-          "select * from items where patientID = 1 and id = ?",
+          'select * from items where patientID = 1 and id = ?',
           [notification.data.orderID],
           (_, { rows: { _array } }) => {
             if (_array.length > 0) {
               this.notificationTimeData(
                 _array[0],
-                notification.data.eyedropName
-              );
+                notification.data.eyedropName,
+              )
             }
-          }
-        );
-      });
+          },
+        )
+      })
       // }
     }
-  };
+  }
 
   notificationTimeData(order, eyedropName) {
-    timedb.transaction(tx => {
+    timedb.transaction((tx) => {
       tx.executeSql(
-        "select * from items where orderID = ?",
+        'select * from items where orderID = ?',
         [order.id],
         (_, { rows: { _array } }) => {
-          this.props.selectEyeDrop({ order, time: _array });
-          Actions.stopwatch({ isNow: false, eyedropName });
-        }
-      );
-    });
+          this.props.selectEyeDrop({ order, time: _array })
+          Actions.stopwatch({ isNow: false, eyedropName })
+        },
+      )
+    })
   }
 
   render() {
@@ -254,11 +253,8 @@ class RouterComponent extends React.Component {
           </Scene>
         </Tabs>
       </Router>
-    );
+    )
   }
 }
 
-export default connect(
-  null,
-  { selectEyeDrop }
-)(RouterComponent);
+export default connect(null, { selectEyeDrop })(RouterComponent)

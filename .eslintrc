@@ -4,7 +4,8 @@
         "arrow-body-style": 0,
         "global-require": 0,
         "one-var": 0,
-        "react/no-did-update-set-state": 0
+        "react/no-did-update-set-state": 0,
+        "semi": [2, "never"]
     },
     "globals": { 
         "fetch": false
